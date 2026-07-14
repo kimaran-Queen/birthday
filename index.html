@@ -30,150 +30,6 @@ body{
 }
 .hidden{display:none !important;}
 
-/* ---------- 설정 버튼 ---------- */
-#settingsBtn{
-  position:fixed;
-  bottom:18px; right:18px;
-  width:44px; height:44px;
-  border-radius:50%;
-  background:var(--ink);
-  color:var(--white-card);
-  border:none;
-  font-size:20px;
-  cursor:pointer;
-  z-index:50;
-  opacity:0.55;
-  display:flex; align-items:center; justify-content:center;
-  box-shadow:2px 2px 0 rgba(0,0,0,0.15);
-  transition:opacity 0.15s ease, transform 0.15s ease;
-}
-#settingsBtn:hover{ opacity:1; transform:rotate(25deg); }
-
-/* ---------- 설정 모달 ---------- */
-#settingsOverlay{
-  position:fixed; inset:0;
-  background:rgba(20,16,14,0.6);
-  z-index:300;
-  display:flex; align-items:flex-start; justify-content:center;
-  padding:40px 16px;
-  overflow-y:auto;
-}
-.settings-card{
-  background:var(--white-card);
-  border:2px solid var(--ink);
-  max-width:560px;
-  width:100%;
-  box-shadow:8px 8px 0 var(--ink);
-  margin-bottom:40px;
-}
-.settings-head{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:22px 26px;
-  border-bottom:2px solid var(--ink);
-}
-.settings-head h2{
-  font-family:'Black Han Sans', sans-serif;
-  font-size:22px;
-}
-.settings-close{
-  background:none; border:none;
-  font-size:22px; cursor:pointer;
-  color:var(--ink);
-}
-.settings-body{
-  padding:24px 26px;
-  display:flex; flex-direction:column;
-  gap:26px;
-}
-.set-group{
-  display:flex; flex-direction:column; gap:10px;
-}
-.set-group-title{
-  font-family:'Black Han Sans', sans-serif;
-  font-size:14px;
-  color:var(--stamp-red);
-  letter-spacing:1px;
-}
-.set-field label{
-  display:block;
-  font-size:12px;
-  font-weight:700;
-  color:#6b6255;
-  margin-bottom:4px;
-}
-.set-field input[type=text], .set-field textarea{
-  width:100%;
-  font-family:'Noto Sans KR', sans-serif;
-  font-size:14px;
-  padding:9px 10px;
-  border:1.5px solid var(--line-grey);
-  background:var(--paper);
-  color:var(--ink);
-  resize:vertical;
-}
-.set-field textarea{ min-height:70px; line-height:1.6; }
-.set-row{ display:flex; gap:8px; }
-.set-row > div{ flex:1; }
-.dyn-item{
-  border:1.5px dashed var(--line-grey);
-  padding:12px;
-  display:flex; flex-direction:column; gap:8px;
-  position:relative;
-}
-.dyn-remove{
-  align-self:flex-end;
-  background:none;
-  border:1px solid var(--stamp-red);
-  color:var(--stamp-red);
-  font-size:11px;
-  padding:3px 8px;
-  cursor:pointer;
-}
-.dyn-remove:hover{ background:var(--stamp-red); color:#fff; }
-.dyn-add{
-  align-self:flex-start;
-  background:var(--paper);
-  border:1.5px dashed var(--ink);
-  padding:8px 14px;
-  font-size:12px;
-  font-weight:700;
-  cursor:pointer;
-}
-.dyn-add:hover{ background:var(--tape-yellow); }
-.settings-foot{
-  padding:20px 26px;
-  border-top:2px solid var(--ink);
-  display:flex; gap:10px; justify-content:space-between;
-  flex-wrap:wrap;
-}
-.set-btn{
-  font-family:'Noto Sans KR', sans-serif;
-  font-weight:700;
-  font-size:14px;
-  padding:11px 22px;
-  border:2px solid var(--ink);
-  cursor:pointer;
-}
-.set-btn.primary{ background:var(--ink); color:var(--white-card); }
-.set-btn.primary:hover{ background:var(--stamp-red); border-color:var(--stamp-red); }
-.set-btn.ghost{ background:transparent; }
-.set-btn.ghost:hover{ background:#e8ddc4; }
-.set-toast{
-  position:fixed;
-  bottom:74px; right:18px;
-  background:var(--ink);
-  color:var(--white-card);
-  padding:10px 16px;
-  font-size:13px;
-  z-index:350;
-  opacity:0;
-  transform:translateY(6px);
-  transition:opacity 0.2s ease, transform 0.2s ease;
-  pointer-events:none;
-}
-.set-toast.show{ opacity:1; transform:translateY(0); }
-
-/* ---------- 게이트 화면 ---------- */
 #gate{
   min-height:100vh;
   display:flex;
@@ -216,7 +72,7 @@ body{
 }
 .doc-question{
   font-family:'Black Han Sans', sans-serif;
-  font-size:32px;
+  font-size:30px;
   text-align:center;
   line-height:1.5;
   margin-bottom:8px;
@@ -254,7 +110,6 @@ body{
   color:#9c9384;
 }
 
-/* ---------- 도장 스플래시 ---------- */
 #stamp-splash{
   position:fixed; inset:0;
   background:rgba(20,16,14,0.92);
@@ -277,9 +132,7 @@ body{
   padding:10px;
   white-space:pre-line;
 }
-.stamp-mark.slam{
-  animation: slam 0.55s cubic-bezier(.2,1.4,.4,1) forwards;
-}
+.stamp-mark.slam{ animation: slam 0.55s cubic-bezier(.2,1.4,.4,1) forwards; }
 @keyframes slam{
   0%{ transform:rotate(-18deg) scale(2.4); opacity:0; }
   60%{ transform:rotate(-14deg) scale(0.94); opacity:1; }
@@ -287,12 +140,10 @@ body{
   100%{ transform:rotate(-15deg) scale(1); opacity:1; }
 }
 
-/* ---------- 경고 화면 ---------- */
 #reject{
   position:fixed; inset:0;
   z-index:200;
-  background:
-    repeating-linear-gradient(45deg, #C13B3B 0 24px, #1a1310 24px 48px);
+  background: repeating-linear-gradient(45deg, #C13B3B 0 24px, #1a1310 24px 48px);
   display:flex; align-items:center; justify-content:center;
   text-align:center;
   padding:24px;
@@ -312,20 +163,9 @@ body{
   margin-bottom:12px;
   line-height:1.2;
 }
-.reject-sub{
-  font-size:15px;
-  margin-bottom:24px;
-  opacity:0.85;
-}
-.reject-img{
-  max-width:100%;
-  border:3px solid #F2C744;
-  margin-bottom:24px;
-}
-.reject-emoji{
-  font-size:80px;
-  margin-bottom:24px;
-}
+.reject-sub{ font-size:15px; margin-bottom:24px; opacity:0.85; }
+.reject-img{ max-width:100%; border:3px solid #F2C744; margin-bottom:24px; }
+.reject-emoji{ font-size:80px; margin-bottom:24px; }
 .reject-btn{
   font-family:'Noto Sans KR', sans-serif;
   font-weight:700;
@@ -336,229 +176,100 @@ body{
   font-size:15px;
 }
 
-/* ---------- 본문 ---------- */
 #content{ padding-bottom:80px; }
-.section{
-  max-width:680px;
-  margin:0 auto;
-  padding:90px 24px;
-}
-.reveal{
-  opacity:0;
-  transform:translateY(24px);
-  transition:opacity 0.7s ease, transform 0.7s ease;
-}
+.section{ max-width:680px; margin:0 auto; padding:90px 24px; }
+.reveal{ opacity:0; transform:translateY(24px); transition:opacity 0.7s ease, transform 0.7s ease; }
 .reveal.show{ opacity:1; transform:translateY(0); }
 
 .hero{
   min-height:92vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:40px 24px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:40px 24px;
 }
-.hero-eyebrow{
-  font-size:13px;
-  letter-spacing:3px;
-  color:var(--stamp-red);
-  font-weight:700;
-  margin-bottom:16px;
-}
-.hero-title{
-  font-family:'Black Han Sans', sans-serif;
-  font-size:clamp(38px, 9vw, 76px);
-  line-height:1.15;
-  margin-bottom:20px;
-}
-.hero-underline{
-  display:inline-block;
-  position:relative;
-}
+.hero-eyebrow{ font-size:13px; letter-spacing:3px; color:var(--stamp-red); font-weight:700; margin-bottom:16px; }
+.hero-title{ font-family:'Black Han Sans', sans-serif; font-size:clamp(38px, 9vw, 76px); line-height:1.15; margin-bottom:20px; }
+.hero-underline{ display:inline-block; position:relative; }
 .hero-underline::after{
-  content:"";
-  position:absolute;
-  left:0; right:0; bottom:2px;
-  height:14px;
-  background:var(--tape-yellow);
-  z-index:-1;
-  opacity:0.85;
+  content:""; position:absolute; left:0; right:0; bottom:2px; height:14px;
+  background:var(--tape-yellow); z-index:-1; opacity:0.85;
 }
-.hero-desc{
-  font-size:16px;
-  color:#5c554a;
-  max-width:420px;
-}
-.hero-scroll{
-  margin-top:56px;
-  font-size:13px;
-  color:#9c9384;
-  animation:bob 1.6s ease-in-out infinite;
-}
+.hero-desc{ font-size:16px; color:#5c554a; max-width:420px; }
+.hero-scroll{ margin-top:56px; font-size:13px; color:#9c9384; animation:bob 1.6s ease-in-out infinite; }
 @keyframes bob{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(8px);} }
 
-.label{
-  font-family:'Black Han Sans', sans-serif;
-  font-size:14px;
-  letter-spacing:2px;
-  color:var(--stamp-red);
-  margin-bottom:10px;
-}
-.section-title{
-  font-family:'Black Han Sans', sans-serif;
-  font-size:clamp(26px,5vw,36px);
-  margin-bottom:32px;
-}
+.label{ font-family:'Black Han Sans', sans-serif; font-size:14px; letter-spacing:2px; color:var(--stamp-red); margin-bottom:10px; }
+.section-title{ font-family:'Black Han Sans', sans-serif; font-size:clamp(26px,5vw,36px); margin-bottom:32px; }
 
 .letter-card{
-  background:var(--white-card);
-  border:2px solid var(--ink);
-  padding:48px 36px;
-  position:relative;
-  box-shadow:6px 6px 0 var(--paper-dark);
+  background:var(--white-card); border:2px solid var(--ink); padding:48px 36px;
+  position:relative; box-shadow:6px 6px 0 var(--paper-dark);
 }
-.tape{
-  position:absolute;
-  width:70px; height:26px;
-  background:rgba(242,199,68,0.75);
-  border:1px solid rgba(0,0,0,0.15);
-}
+.tape{ position:absolute; width:70px; height:26px; background:rgba(242,199,68,0.75); border:1px solid rgba(0,0,0,0.15); }
 .tape.tl{ top:-14px; left:20px; transform:rotate(-6deg); }
 .tape.tr{ top:-14px; right:20px; transform:rotate(5deg); }
-.letter-body{
-  font-family:'Gaegu', sans-serif;
-  font-size:20px;
-  line-height:2;
-  white-space:pre-line;
-}
-.letter-sign{
-  font-family:'Gaegu', sans-serif;
-  font-size:20px;
-  text-align:right;
-  margin-top:24px;
-  font-weight:700;
-}
+.letter-body{ font-family:'Gaegu', sans-serif; font-size:20px; line-height:2; white-space:pre-line; }
+.letter-sign{ font-family:'Gaegu', sans-serif; font-size:20px; text-align:right; margin-top:24px; font-weight:700; }
 
-.timeline{
-  border-left:2px dashed var(--line-grey);
-  padding-left:28px;
-  display:flex;
-  flex-direction:column;
-  gap:36px;
-}
+.timeline{ border-left:2px dashed var(--line-grey); padding-left:28px; display:flex; flex-direction:column; gap:36px; }
 .tl-item{ position:relative; }
 .tl-item::before{
-  content:"";
-  position:absolute;
-  left:-34px; top:4px;
-  width:12px; height:12px;
-  border-radius:50%;
-  background:var(--stamp-red);
-  border:3px solid var(--paper);
-  box-shadow:0 0 0 2px var(--stamp-red);
+  content:""; position:absolute; left:-34px; top:4px; width:12px; height:12px; border-radius:50%;
+  background:var(--stamp-red); border:3px solid var(--paper); box-shadow:0 0 0 2px var(--stamp-red);
 }
-.tl-date{
-  font-size:12px;
-  font-weight:700;
-  color:var(--stamp-red);
-  letter-spacing:1px;
-  margin-bottom:4px;
-}
-.tl-title{
-  font-family:'Black Han Sans', sans-serif;
-  font-size:19px;
-  margin-bottom:6px;
-}
+.tl-date{ font-size:12px; font-weight:700; color:var(--stamp-red); letter-spacing:1px; margin-bottom:4px; }
+.tl-title{ font-family:'Black Han Sans', sans-serif; font-size:19px; margin-bottom:6px; }
 .tl-desc{ font-size:14px; color:#5c554a; line-height:1.7; }
 
-.gallery{
-  display:grid;
-  grid-template-columns:repeat(2, 1fr);
-  gap:20px;
-}
+.gallery{ display:grid; grid-template-columns:repeat(2, 1fr); gap:20px; }
 .polaroid{
-  background:var(--white-card);
-  border:1px solid var(--ink);
-  padding:10px 10px 24px;
-  box-shadow:4px 4px 0 var(--paper-dark);
-  transform:rotate(var(--r,0deg));
+  background:var(--white-card); border:1px solid var(--ink); padding:10px 10px 24px;
+  box-shadow:4px 4px 0 var(--paper-dark); transform:rotate(var(--r,0deg));
 }
 .polaroid:nth-child(odd){ --r:-2deg; }
 .polaroid:nth-child(even){ --r:2deg; }
-.polaroid-img{
-  width:100%;
-  aspect-ratio:1/1;
-  object-fit:cover;
-  display:block;
-  background:var(--paper-dark);
-}
+.polaroid-img{ width:100%; aspect-ratio:1/1; object-fit:cover; display:block; background:var(--paper-dark); }
 .polaroid-placeholder{
-  width:100%;
-  aspect-ratio:1/1;
-  border:2px dashed var(--line-grey);
-  display:flex; align-items:center; justify-content:center;
-  flex-direction:column;
-  gap:6px;
-  color:#a89d87;
-  font-size:12px;
-  text-align:center;
+  width:100%; aspect-ratio:1/1; border:2px dashed var(--line-grey);
+  display:flex; align-items:center; justify-content:center; flex-direction:column; gap:6px;
+  color:#a89d87; font-size:12px; text-align:center;
 }
-.polaroid-caption{
-  font-family:'Gaegu', sans-serif;
-  font-size:14px;
-  text-align:center;
-  margin-top:8px;
-}
+.polaroid-caption{ font-family:'Gaegu', sans-serif; font-size:14px; text-align:center; margin-top:8px; }
 
 .closing{ text-align:center; }
-.closing-title{
-  font-family:'Black Han Sans', sans-serif;
-  font-size:clamp(28px,6vw,44px);
-  margin-bottom:16px;
-}
-.closing-desc{
-  font-size:15px;
-  color:#5c554a;
-  margin-bottom:32px;
-}
+.closing-title{ font-family:'Black Han Sans', sans-serif; font-size:clamp(28px,6vw,44px); margin-bottom:16px; }
+.closing-desc{ font-size:15px; color:#5c554a; margin-bottom:32px; }
 .replay-btn{
-  font-family:'Noto Sans KR', sans-serif;
-  font-weight:700;
-  padding:12px 28px;
-  border:2px solid var(--ink);
-  background:transparent;
-  cursor:pointer;
-  font-size:14px;
+  font-family:'Noto Sans KR', sans-serif; font-weight:700; padding:12px 28px;
+  border:2px solid var(--ink); background:transparent; cursor:pointer; font-size:14px;
 }
 .replay-btn:hover{ background:var(--ink); color:var(--white-card); }
 
 @media(max-width:520px){
   .gallery{ grid-template-columns:1fr 1fr; gap:14px; }
   .letter-card{ padding:32px 22px; }
-  .settings-body{ padding:20px 18px; }
-  .settings-head{ padding:18px; }
 }
 </style>
 </head>
 <body>
 
 <!-- ============================================================
-     🎂 기본값 CONFIG (설정 버튼으로 바꾼 내용은 브라우저에 저장되어
-     기본값보다 우선 적용됩니다. 기본값 자체를 바꾸고 싶으면
-     여기 값을 수정하세요)
+     🎂 여기 값들만 고치면 내용이 바뀝니다 (수정하고 싶으면 이 부분만!)
      ============================================================ -->
 <script>
-const DEFAULT_CONFIG = {
-  name: "OOO",
+const CONFIG = {
+  gateQuestion: "이진범 본인 입니까?",
   stampText: "승인\n완료",
+
   rejectImageUrl: "",
   rejectEmoji: "🚨",
   rejectTitle: "당장 나가시오",
   rejectSub: "이 사이트는 본인 확인이 완료된 자만 입장 가능합니다.",
+
   heroEyebrow: "SPECIAL DOCUMENT · 생일 특별 서류",
   heroTitleTop: "생일 축하해",
+  heroName: "진범아!",
   heroDesc: "1년에 한 번뿐인 오늘, 너를 위해 준비했어. 천천히 내려보면서 읽어줘.",
+
   letterBody: `자기야, 생일 축하해!
 
 바쁘다는 핑계로 잘 못 챙겨준 날도 많았는데
@@ -572,39 +283,26 @@ const DEFAULT_CONFIG = {
 
 사랑해 :)`,
   letterSign: "- 너의 여자친구가",
+
   timeline: [
     { date: "2023.03", title: "처음 만난 날", desc: "그때 진짜 어색했는데 지금 생각하면 웃겨." },
     { date: "2023.08", title: "첫 여행", desc: "비 와서 계획 다 틀어졌는데 그래도 재밌었지." },
     { date: "2024.12", title: "가장 웃겼던 순간", desc: "그날 얘기만 하면 아직도 웃음 참기 힘들어." },
     { date: "2026.07", title: "오늘, 너의 생일", desc: "축하해! 앞으로도 잘 부탁해." }
   ],
+
   photos: [
     { url: "", caption: "여기에 사진 추가" },
     { url: "", caption: "여기에 사진 추가" },
     { url: "", caption: "여기에 사진 추가" },
     { url: "", caption: "여기에 사진 추가" }
   ],
+
   closingTitle: "다시 한 번, 생일 축하해 🎉",
   closingDesc: "오늘 하루도, 앞으로의 모든 날도 행복하길."
 };
-
-const STORAGE_KEY = "bdaySiteConfig_v1";
-
-function loadConfig(){
-  try{
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if(saved){
-      const parsed = JSON.parse(saved);
-      return Object.assign({}, DEFAULT_CONFIG, parsed);
-    }
-  }catch(e){}
-  return JSON.parse(JSON.stringify(DEFAULT_CONFIG));
-}
-
-let CONFIG = loadConfig();
 </script>
 
-<!-- ---------- 게이트 화면 ---------- -->
 <div id="gate">
   <div class="doc-card">
     <div class="doc-eyebrow">본인 확인 절차</div>
@@ -619,12 +317,10 @@ let CONFIG = loadConfig();
   </div>
 </div>
 
-<!-- ---------- 도장 스플래시 ---------- -->
 <div id="stamp-splash" class="hidden">
   <div class="stamp-mark" id="stampMark"></div>
 </div>
 
-<!-- ---------- 경고(아니요) 화면 ---------- -->
 <div id="reject" class="hidden">
   <div class="reject-card">
     <div class="reject-title" id="rejectTitle"></div>
@@ -635,7 +331,6 @@ let CONFIG = loadConfig();
   </div>
 </div>
 
-<!-- ---------- 본문 ---------- -->
 <div id="content" class="hidden">
   <section class="hero">
     <div class="hero-eyebrow" id="heroEyebrow"></div>
@@ -677,190 +372,66 @@ let CONFIG = loadConfig();
   </section>
 </div>
 
-<!-- ---------- 설정 버튼 & 모달 ---------- -->
-<button id="settingsBtn" title="설정">⚙</button>
-<div id="settingsOverlay" class="hidden">
-  <div class="settings-card">
-    <div class="settings-head">
-      <h2>사이트 설정</h2>
-      <button class="settings-close" id="settingsCloseBtn">✕</button>
-    </div>
-    <div class="settings-body">
-
-      <div class="set-group">
-        <div class="set-group-title">기본 정보</div>
-        <div class="set-field">
-          <label>이름/애칭 (게이트에 표시됨)</label>
-          <input type="text" id="f_name">
-        </div>
-      </div>
-
-      <div class="set-group">
-        <div class="set-group-title">도장 · 경고 화면</div>
-        <div class="set-field">
-          <label>도장 문구 (예 클릭 시)</label>
-          <input type="text" id="f_stampText">
-        </div>
-        <div class="set-field">
-          <label>경고 화면 제목</label>
-          <input type="text" id="f_rejectTitle">
-        </div>
-        <div class="set-field">
-          <label>경고 화면 부제</label>
-          <input type="text" id="f_rejectSub">
-        </div>
-        <div class="set-field">
-          <label>경고 이미지 URL (비워두면 이모지 표시)</label>
-          <input type="text" id="f_rejectImageUrl" placeholder="https://...">
-        </div>
-        <div class="set-field">
-          <label>경고 이모지 (이미지 URL 없을 때)</label>
-          <input type="text" id="f_rejectEmoji">
-        </div>
-      </div>
-
-      <div class="set-group">
-        <div class="set-group-title">첫 화면(히어로)</div>
-        <div class="set-field">
-          <label>작은 라벨 문구</label>
-          <input type="text" id="f_heroEyebrow">
-        </div>
-        <div class="set-field">
-          <label>큰 제목 첫 줄</label>
-          <input type="text" id="f_heroTitleTop">
-        </div>
-        <div class="set-field">
-          <label>설명 문구</label>
-          <textarea id="f_heroDesc"></textarea>
-        </div>
-      </div>
-
-      <div class="set-group">
-        <div class="set-group-title">편지</div>
-        <div class="set-field">
-          <label>편지 본문</label>
-          <textarea id="f_letterBody" style="min-height:140px;"></textarea>
-        </div>
-        <div class="set-field">
-          <label>편지 서명</label>
-          <input type="text" id="f_letterSign">
-        </div>
-      </div>
-
-      <div class="set-group">
-        <div class="set-group-title">타임라인</div>
-        <div id="tlWrap" style="display:flex; flex-direction:column; gap:10px;"></div>
-        <button class="dyn-add" id="tlAddBtn">+ 타임라인 항목 추가</button>
-      </div>
-
-      <div class="set-group">
-        <div class="set-group-title">사진첩</div>
-        <div id="phWrap" style="display:flex; flex-direction:column; gap:10px;"></div>
-        <button class="dyn-add" id="phAddBtn">+ 사진 추가</button>
-      </div>
-
-      <div class="set-group">
-        <div class="set-group-title">마무리 화면</div>
-        <div class="set-field">
-          <label>마무리 제목</label>
-          <input type="text" id="f_closingTitle">
-        </div>
-        <div class="set-field">
-          <label>마무리 설명</label>
-          <textarea id="f_closingDesc"></textarea>
-        </div>
-      </div>
-
-    </div>
-    <div class="settings-foot" style="flex-direction:column; align-items:stretch;">
-      <div style="font-size:11px; color:#8a8070; line-height:1.6;">
-        ⚠️ 저장하기는 <b>이 브라우저에만</b> 반영돼요 (남친 화면엔 안 보임).<br>
-        진짜 사이트에도 반영하려면 아래 "코드로 복사"를 누르고, index.html 파일의
-        <code>DEFAULT_CONFIG = { ... }</code> 부분을 통째로 교체한 뒤 GitHub에 다시 저장(Commit)하세요.
-      </div>
-      <div style="display:flex; gap:10px; justify-content:space-between; flex-wrap:wrap;">
-        <button class="set-btn ghost" id="resetBtn">기본값으로 초기화</button>
-        <div style="display:flex; gap:10px;">
-          <button class="set-btn ghost" id="exportBtn">코드로 복사</button>
-          <button class="set-btn primary" id="saveBtn">저장하기(미리보기)</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="set-toast" id="toast">저장됐어요!</div>
-
 <script>
-// ---------- 렌더링 ----------
-function renderSite(){
-  document.getElementById('gateQuestion').textContent = CONFIG.name + " 입니까?";
-  document.getElementById('stampMark').textContent = CONFIG.stampText;
-  document.getElementById('rejectTitle').textContent = CONFIG.rejectTitle;
-  document.getElementById('rejectSub').textContent = CONFIG.rejectSub;
-  document.getElementById('heroEyebrow').textContent = CONFIG.heroEyebrow;
-  document.getElementById('heroTitleTop').textContent = CONFIG.heroTitleTop;
-  document.getElementById('heroName').textContent = CONFIG.name + "야!";
-  document.getElementById('heroDesc').textContent = CONFIG.heroDesc;
-  document.getElementById('letterBody').textContent = CONFIG.letterBody;
-  document.getElementById('letterSign').textContent = CONFIG.letterSign;
-  document.getElementById('closingTitle').textContent = CONFIG.closingTitle;
-  document.getElementById('closingDesc').textContent = CONFIG.closingDesc;
+document.getElementById('gateQuestion').textContent = CONFIG.gateQuestion;
+document.getElementById('stampMark').textContent = CONFIG.stampText;
+document.getElementById('rejectTitle').textContent = CONFIG.rejectTitle;
+document.getElementById('rejectSub').textContent = CONFIG.rejectSub;
+document.getElementById('heroEyebrow').textContent = CONFIG.heroEyebrow;
+document.getElementById('heroTitleTop').textContent = CONFIG.heroTitleTop;
+document.getElementById('heroName').textContent = CONFIG.heroName;
+document.getElementById('heroDesc').textContent = CONFIG.heroDesc;
+document.getElementById('letterBody').textContent = CONFIG.letterBody;
+document.getElementById('letterSign').textContent = CONFIG.letterSign;
+document.getElementById('closingTitle').textContent = CONFIG.closingTitle;
+document.getElementById('closingDesc').textContent = CONFIG.closingDesc;
 
+if(CONFIG.rejectImageUrl){
   const img = document.getElementById('rejectImg');
-  const emojiEl = document.getElementById('rejectEmojiEl');
-  if(CONFIG.rejectImageUrl){
-    img.src = CONFIG.rejectImageUrl;
-    img.classList.remove('hidden');
-    emojiEl.classList.add('hidden');
-  } else {
-    img.classList.add('hidden');
-    emojiEl.classList.remove('hidden');
-    emojiEl.textContent = CONFIG.rejectEmoji;
-  }
-
-  const tlWrap = document.getElementById('timelineWrap');
-  tlWrap.innerHTML = "";
-  CONFIG.timeline.forEach(item=>{
-    const el = document.createElement('div');
-    el.className = 'tl-item';
-    el.innerHTML = `
-      <div class="tl-date"></div>
-      <div class="tl-title"></div>
-      <div class="tl-desc"></div>
-    `;
-    el.querySelector('.tl-date').textContent = item.date;
-    el.querySelector('.tl-title').textContent = item.title;
-    el.querySelector('.tl-desc').textContent = item.desc;
-    tlWrap.appendChild(el);
-  });
-
-  const galleryWrap = document.getElementById('galleryWrap');
-  galleryWrap.innerHTML = "";
-  CONFIG.photos.forEach(p=>{
-    const el = document.createElement('div');
-    el.className = 'polaroid';
-    if(p.url){
-      const img2 = document.createElement('img');
-      img2.className = 'polaroid-img';
-      img2.src = p.url;
-      img2.alt = p.caption || '';
-      el.appendChild(img2);
-    } else {
-      const ph = document.createElement('div');
-      ph.className = 'polaroid-placeholder';
-      ph.innerHTML = '📷<br>' + (p.caption ? '' : '사진을 추가해주세요');
-      el.appendChild(ph);
-    }
-    const cap = document.createElement('div');
-    cap.className = 'polaroid-caption';
-    cap.textContent = p.caption || '';
-    el.appendChild(cap);
-    galleryWrap.appendChild(el);
-  });
+  img.src = CONFIG.rejectImageUrl;
+  img.classList.remove('hidden');
+} else {
+  document.getElementById('rejectEmojiEl').textContent = CONFIG.rejectEmoji;
 }
-renderSite();
 
-// ---------- 게이트/도장/경고 인터랙션 ----------
+const tlWrap = document.getElementById('timelineWrap');
+CONFIG.timeline.forEach(item=>{
+  const el = document.createElement('div');
+  el.className = 'tl-item';
+  el.innerHTML = `
+    <div class="tl-date"></div>
+    <div class="tl-title"></div>
+    <div class="tl-desc"></div>
+  `;
+  el.querySelector('.tl-date').textContent = item.date;
+  el.querySelector('.tl-title').textContent = item.title;
+  el.querySelector('.tl-desc').textContent = item.desc;
+  tlWrap.appendChild(el);
+});
+
+const galleryWrap = document.getElementById('galleryWrap');
+CONFIG.photos.forEach(p=>{
+  const el = document.createElement('div');
+  el.className = 'polaroid';
+  if(p.url){
+    const img2 = document.createElement('img');
+    img2.className = 'polaroid-img';
+    img2.src = p.url;
+    img2.alt = p.caption || '';
+    el.appendChild(img2);
+  } else {
+    const ph = document.createElement('div');
+    ph.className = 'polaroid-placeholder';
+    ph.innerHTML = '📷<br>' + (p.caption ? '' : '사진을 추가해주세요');
+    el.appendChild(ph);
+  }
+  const cap = document.createElement('div');
+  cap.className = 'polaroid-caption';
+  cap.textContent = p.caption || '';
+  el.appendChild(cap);
+  galleryWrap.appendChild(el);
+});
+
 const gate = document.getElementById('gate');
 const splash = document.getElementById('stamp-splash');
 const stampMark = document.getElementById('stampMark');
@@ -906,190 +477,6 @@ function initReveal(){
   }, { threshold:0.15 });
   items.forEach(i=>io.observe(i));
 }
-
-// ---------- 설정 패널 ----------
-const settingsBtn = document.getElementById('settingsBtn');
-const settingsOverlay = document.getElementById('settingsOverlay');
-const toast = document.getElementById('toast');
-
-function showToast(msg){
-  toast.textContent = msg;
-  toast.classList.add('show');
-  setTimeout(()=> toast.classList.remove('show'), 1800);
-}
-
-function openSettings(){
-  fillFormFromConfig();
-  settingsOverlay.classList.remove('hidden');
-}
-function closeSettings(){
-  settingsOverlay.classList.add('hidden');
-}
-
-settingsBtn.addEventListener('click', openSettings);
-document.getElementById('settingsCloseBtn').addEventListener('click', closeSettings);
-settingsOverlay.addEventListener('click', (e)=>{
-  if(e.target === settingsOverlay) closeSettings();
-});
-
-function fillFormFromConfig(){
-  document.getElementById('f_name').value = CONFIG.name;
-  document.getElementById('f_stampText').value = CONFIG.stampText;
-  document.getElementById('f_rejectTitle').value = CONFIG.rejectTitle;
-  document.getElementById('f_rejectSub').value = CONFIG.rejectSub;
-  document.getElementById('f_rejectImageUrl').value = CONFIG.rejectImageUrl;
-  document.getElementById('f_rejectEmoji').value = CONFIG.rejectEmoji;
-  document.getElementById('f_heroEyebrow').value = CONFIG.heroEyebrow;
-  document.getElementById('f_heroTitleTop').value = CONFIG.heroTitleTop;
-  document.getElementById('f_heroDesc').value = CONFIG.heroDesc;
-  document.getElementById('f_letterBody').value = CONFIG.letterBody;
-  document.getElementById('f_letterSign').value = CONFIG.letterSign;
-  document.getElementById('f_closingTitle').value = CONFIG.closingTitle;
-  document.getElementById('f_closingDesc').value = CONFIG.closingDesc;
-
-  renderDynList('tlWrap', CONFIG.timeline, [
-    {key:'date', label:'날짜', placeholder:'예: 2026.07'},
-    {key:'title', label:'제목', placeholder:'예: 처음 만난 날'},
-    {key:'desc', label:'설명', placeholder:'짧은 설명', textarea:true}
-  ]);
-  renderDynList('phWrap', CONFIG.photos, [
-    {key:'url', label:'사진 URL', placeholder:'https://... (비워두면 placeholder)'},
-    {key:'caption', label:'캡션', placeholder:'사진 설명'}
-  ]);
-}
-
-function renderDynList(wrapId, arr, fields){
-  const wrap = document.getElementById(wrapId);
-  wrap.innerHTML = "";
-  arr.forEach((item, idx)=>{
-    const row = document.createElement('div');
-    row.className = 'dyn-item';
-    row.dataset.idx = idx;
-    fields.forEach(f=>{
-      const fieldWrap = document.createElement('div');
-      fieldWrap.className = 'set-field';
-      const label = document.createElement('label');
-      label.textContent = f.label;
-      const inputEl = document.createElement(f.textarea ? 'textarea' : 'input');
-      if(!f.textarea) inputEl.type = 'text';
-      inputEl.placeholder = f.placeholder || '';
-      inputEl.value = item[f.key] || '';
-      inputEl.dataset.field = f.key;
-      fieldWrap.appendChild(label);
-      fieldWrap.appendChild(inputEl);
-      row.appendChild(fieldWrap);
-    });
-    const removeBtn = document.createElement('button');
-    removeBtn.className = 'dyn-remove';
-    removeBtn.textContent = '이 항목 삭제';
-    removeBtn.addEventListener('click', ()=>{ row.remove(); });
-    row.appendChild(removeBtn);
-    wrap.appendChild(row);
-  });
-}
-
-document.getElementById('tlAddBtn').addEventListener('click', ()=>{
-  const wrap = document.getElementById('tlWrap');
-  const current = readDynList('tlWrap', ['date','title','desc']);
-  current.push({date:'', title:'', desc:''});
-  renderDynList('tlWrap', current, [
-    {key:'date', label:'날짜', placeholder:'예: 2026.07'},
-    {key:'title', label:'제목', placeholder:'예: 처음 만난 날'},
-    {key:'desc', label:'설명', placeholder:'짧은 설명', textarea:true}
-  ]);
-});
-
-document.getElementById('phAddBtn').addEventListener('click', ()=>{
-  const current = readDynList('phWrap', ['url','caption']);
-  current.push({url:'', caption:''});
-  renderDynList('phWrap', current, [
-    {key:'url', label:'사진 URL', placeholder:'https://... (비워두면 placeholder)'},
-    {key:'caption', label:'캡션', placeholder:'사진 설명'}
-  ]);
-});
-
-function readDynList(wrapId, keys){
-  const wrap = document.getElementById(wrapId);
-  const rows = Array.from(wrap.querySelectorAll('.dyn-item'));
-  return rows.map(row=>{
-    const obj = {};
-    keys.forEach(k=>{
-      const inputEl = row.querySelector(`[data-field="${k}"]`);
-      obj[k] = inputEl ? inputEl.value : '';
-    });
-    return obj;
-  });
-}
-
-document.getElementById('saveBtn').addEventListener('click', ()=>{
-  CONFIG.name = document.getElementById('f_name').value || DEFAULT_CONFIG.name;
-  CONFIG.stampText = document.getElementById('f_stampText').value;
-  CONFIG.rejectTitle = document.getElementById('f_rejectTitle').value;
-  CONFIG.rejectSub = document.getElementById('f_rejectSub').value;
-  CONFIG.rejectImageUrl = document.getElementById('f_rejectImageUrl').value;
-  CONFIG.rejectEmoji = document.getElementById('f_rejectEmoji').value;
-  CONFIG.heroEyebrow = document.getElementById('f_heroEyebrow').value;
-  CONFIG.heroTitleTop = document.getElementById('f_heroTitleTop').value;
-  CONFIG.heroDesc = document.getElementById('f_heroDesc').value;
-  CONFIG.letterBody = document.getElementById('f_letterBody').value;
-  CONFIG.letterSign = document.getElementById('f_letterSign').value;
-  CONFIG.closingTitle = document.getElementById('f_closingTitle').value;
-  CONFIG.closingDesc = document.getElementById('f_closingDesc').value;
-  CONFIG.timeline = readDynList('tlWrap', ['date','title','desc']);
-  CONFIG.photos = readDynList('phWrap', ['url','caption']);
-
-  try{
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(CONFIG));
-  }catch(e){}
-
-  renderSite();
-  closeSettings();
-  showToast('저장됐어요! 이 브라우저에 반영됐어요.');
-});
-
-document.getElementById('exportBtn').addEventListener('click', ()=>{
-  // 현재 폼에 입력된 값을 기준으로 CONFIG를 최신화한 뒤 코드 문자열 생성
-  const tmp = {
-    name: document.getElementById('f_name').value || DEFAULT_CONFIG.name,
-    stampText: document.getElementById('f_stampText').value,
-    rejectImageUrl: document.getElementById('f_rejectImageUrl').value,
-    rejectEmoji: document.getElementById('f_rejectEmoji').value,
-    rejectTitle: document.getElementById('f_rejectTitle').value,
-    rejectSub: document.getElementById('f_rejectSub').value,
-    heroEyebrow: document.getElementById('f_heroEyebrow').value,
-    heroTitleTop: document.getElementById('f_heroTitleTop').value,
-    heroDesc: document.getElementById('f_heroDesc').value,
-    letterBody: document.getElementById('f_letterBody').value,
-    letterSign: document.getElementById('f_letterSign').value,
-    timeline: readDynList('tlWrap', ['date','title','desc']),
-    photos: readDynList('phWrap', ['url','caption']),
-    closingTitle: document.getElementById('f_closingTitle').value,
-    closingDesc: document.getElementById('f_closingDesc').value
-  };
-  const code = "const DEFAULT_CONFIG = " + JSON.stringify(tmp, null, 2) + ";";
-
-  const finish = (ok)=>{
-    showToast(ok ? '코드가 복사됐어요! index.html의 DEFAULT_CONFIG 부분에 붙여넣으세요.' : '복사에 실패했어요. 아래 창에서 직접 복사해주세요.');
-    if(!ok){
-      window.prompt('복사가 안 됐다면 아래 내용을 직접 선택해서 복사하세요 (Ctrl+C):', code);
-    }
-  };
-
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(code).then(()=>finish(true)).catch(()=>finish(false));
-  } else {
-    finish(false);
-  }
-});
-
-document.getElementById('resetBtn').addEventListener('click', ()=>{
-  if(!confirm('정말 기본값으로 초기화할까요? 지금까지 수정한 내용이 사라져요.')) return;
-  try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
-  CONFIG = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
-  renderSite();
-  fillFormFromConfig();
-  showToast('기본값으로 초기화했어요.');
-});
 </script>
 
 </body>
