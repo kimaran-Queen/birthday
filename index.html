@@ -7,9 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   🎂 여기서부터 자유롭게 수정하세요! (설정 구간)
-   ============================================================ */
 :root{
   --paper:#EDE4D0;
   --paper-dark:#E1D5B8;
@@ -32,6 +29,149 @@ body{
     radial-gradient(circle at 80% 70%, rgba(0,0,0,0.02) 0, transparent 40%);
 }
 .hidden{display:none !important;}
+
+/* ---------- 설정 버튼 ---------- */
+#settingsBtn{
+  position:fixed;
+  bottom:18px; right:18px;
+  width:44px; height:44px;
+  border-radius:50%;
+  background:var(--ink);
+  color:var(--white-card);
+  border:none;
+  font-size:20px;
+  cursor:pointer;
+  z-index:50;
+  opacity:0.55;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:2px 2px 0 rgba(0,0,0,0.15);
+  transition:opacity 0.15s ease, transform 0.15s ease;
+}
+#settingsBtn:hover{ opacity:1; transform:rotate(25deg); }
+
+/* ---------- 설정 모달 ---------- */
+#settingsOverlay{
+  position:fixed; inset:0;
+  background:rgba(20,16,14,0.6);
+  z-index:300;
+  display:flex; align-items:flex-start; justify-content:center;
+  padding:40px 16px;
+  overflow-y:auto;
+}
+.settings-card{
+  background:var(--white-card);
+  border:2px solid var(--ink);
+  max-width:560px;
+  width:100%;
+  box-shadow:8px 8px 0 var(--ink);
+  margin-bottom:40px;
+}
+.settings-head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:22px 26px;
+  border-bottom:2px solid var(--ink);
+}
+.settings-head h2{
+  font-family:'Black Han Sans', sans-serif;
+  font-size:22px;
+}
+.settings-close{
+  background:none; border:none;
+  font-size:22px; cursor:pointer;
+  color:var(--ink);
+}
+.settings-body{
+  padding:24px 26px;
+  display:flex; flex-direction:column;
+  gap:26px;
+}
+.set-group{
+  display:flex; flex-direction:column; gap:10px;
+}
+.set-group-title{
+  font-family:'Black Han Sans', sans-serif;
+  font-size:14px;
+  color:var(--stamp-red);
+  letter-spacing:1px;
+}
+.set-field label{
+  display:block;
+  font-size:12px;
+  font-weight:700;
+  color:#6b6255;
+  margin-bottom:4px;
+}
+.set-field input[type=text], .set-field textarea{
+  width:100%;
+  font-family:'Noto Sans KR', sans-serif;
+  font-size:14px;
+  padding:9px 10px;
+  border:1.5px solid var(--line-grey);
+  background:var(--paper);
+  color:var(--ink);
+  resize:vertical;
+}
+.set-field textarea{ min-height:70px; line-height:1.6; }
+.set-row{ display:flex; gap:8px; }
+.set-row > div{ flex:1; }
+.dyn-item{
+  border:1.5px dashed var(--line-grey);
+  padding:12px;
+  display:flex; flex-direction:column; gap:8px;
+  position:relative;
+}
+.dyn-remove{
+  align-self:flex-end;
+  background:none;
+  border:1px solid var(--stamp-red);
+  color:var(--stamp-red);
+  font-size:11px;
+  padding:3px 8px;
+  cursor:pointer;
+}
+.dyn-remove:hover{ background:var(--stamp-red); color:#fff; }
+.dyn-add{
+  align-self:flex-start;
+  background:var(--paper);
+  border:1.5px dashed var(--ink);
+  padding:8px 14px;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+}
+.dyn-add:hover{ background:var(--tape-yellow); }
+.settings-foot{
+  padding:20px 26px;
+  border-top:2px solid var(--ink);
+  display:flex; gap:10px; justify-content:space-between;
+  flex-wrap:wrap;
+}
+.set-btn{
+  font-family:'Noto Sans KR', sans-serif;
+  font-weight:700;
+  font-size:14px;
+  padding:11px 22px;
+  border:2px solid var(--ink);
+  cursor:pointer;
+}
+.set-btn.primary{ background:var(--ink); color:var(--white-card); }
+.set-btn.primary:hover{ background:var(--stamp-red); border-color:var(--stamp-red); }
+.set-btn.ghost{ background:transparent; }
+.set-btn.ghost:hover{ background:#e8ddc4; }
+.set-toast{
+  position:fixed;
+  bottom:74px; right:18px;
+  background:var(--ink);
+  color:var(--white-card);
+  padding:10px 16px;
+  font-size:13px;
+  z-index:350;
+  opacity:0;
+  transform:translateY(6px);
+  transition:opacity 0.2s ease, transform 0.2s ease;
+  pointer-events:none;
+}
+.set-toast.show{ opacity:1; transform:translateY(0); }
 
 /* ---------- 게이트 화면 ---------- */
 #gate{
@@ -135,6 +275,7 @@ body{
   opacity:0;
   line-height:1.15;
   padding:10px;
+  white-space:pre-line;
 }
 .stamp-mark.slam{
   animation: slam 0.55s cubic-bezier(.2,1.4,.4,1) forwards;
@@ -209,7 +350,6 @@ body{
 }
 .reveal.show{ opacity:1; transform:translateY(0); }
 
-/* 히어로 */
 .hero{
   min-height:92vh;
   display:flex;
@@ -258,7 +398,6 @@ body{
 }
 @keyframes bob{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(8px);} }
 
-/* 섹션 라벨 */
 .label{
   font-family:'Black Han Sans', sans-serif;
   font-size:14px;
@@ -272,7 +411,6 @@ body{
   margin-bottom:32px;
 }
 
-/* 편지 카드 */
 .letter-card{
   background:var(--white-card);
   border:2px solid var(--ink);
@@ -302,7 +440,6 @@ body{
   font-weight:700;
 }
 
-/* 타임라인 */
 .timeline{
   border-left:2px dashed var(--line-grey);
   padding-left:28px;
@@ -335,7 +472,6 @@ body{
 }
 .tl-desc{ font-size:14px; color:#5c554a; line-height:1.7; }
 
-/* 사진 갤러리 */
 .gallery{
   display:grid;
   grid-template-columns:repeat(2, 1fr);
@@ -375,10 +511,7 @@ body{
   margin-top:8px;
 }
 
-/* 클로징 */
-.closing{
-  text-align:center;
-}
+.closing{ text-align:center; }
 .closing-title{
   font-family:'Black Han Sans', sans-serif;
   font-size:clamp(28px,6vw,44px);
@@ -403,36 +536,29 @@ body{
 @media(max-width:520px){
   .gallery{ grid-template-columns:1fr 1fr; gap:14px; }
   .letter-card{ padding:32px 22px; }
+  .settings-body{ padding:20px 18px; }
+  .settings-head{ padding:18px; }
 }
 </style>
 </head>
 <body>
 
 <!-- ============================================================
-     🎂 CONFIG: 여기 값만 바꾸면 사이트 전체 내용이 바뀝니다
+     🎂 기본값 CONFIG (설정 버튼으로 바꾼 내용은 브라우저에 저장되어
+     기본값보다 우선 적용됩니다. 기본값 자체를 바꾸고 싶으면
+     여기 값을 수정하세요)
      ============================================================ -->
 <script>
-const CONFIG = {
-  // 게이트에 표시될 이름/애칭 (예: "민수", "자기", "오빠" 등)
+const DEFAULT_CONFIG = {
   name: "OOO",
-
-  // "예" 눌렀을 때 도장에 찍힐 문구
   stampText: "승인\n완료",
-
-  // "아니요" 눌렀을 때 보여줄 경고 이미지 URL. 비워두면(""),
-  // 아래 rejectEmoji만 큰 이모지로 표시됩니다.
-  // 이미지 넣고 싶으면: rejectImageUrl: "https://내이미지주소.jpg"
   rejectImageUrl: "",
   rejectEmoji: "🚨",
   rejectTitle: "당장 나가시오",
   rejectSub: "이 사이트는 본인 확인이 완료된 자만 입장 가능합니다.",
-
-  // 히어로(첫 화면) 문구
   heroEyebrow: "SPECIAL DOCUMENT · 생일 특별 서류",
   heroTitleTop: "생일 축하해",
   heroDesc: "1년에 한 번뿐인 오늘, 너를 위해 준비했어. 천천히 내려보면서 읽어줘.",
-
-  // 편지 내용 (줄바꿈은 그대로 유지됩니다)
   letterBody: `자기야, 생일 축하해!
 
 바쁘다는 핑계로 잘 못 챙겨준 날도 많았는데
@@ -446,27 +572,36 @@ const CONFIG = {
 
 사랑해 :)`,
   letterSign: "- 너의 여자친구가",
-
-  // 타임라인 (원하는 만큼 추가/삭제 가능)
   timeline: [
     { date: "2023.03", title: "처음 만난 날", desc: "그때 진짜 어색했는데 지금 생각하면 웃겨." },
     { date: "2023.08", title: "첫 여행", desc: "비 와서 계획 다 틀어졌는데 그래도 재밌었지." },
     { date: "2024.12", title: "가장 웃겼던 순간", desc: "그날 얘기만 하면 아직도 웃음 참기 힘들어." },
     { date: "2026.07", title: "오늘, 너의 생일", desc: "축하해! 앞으로도 잘 부탁해." }
   ],
-
-  // 사진 갤러리. url을 비워두면 점선 placeholder 박스로 표시됩니다.
-  // 예: { url: "https://내사진주소.jpg", caption: "그날 그 사진" }
   photos: [
     { url: "", caption: "여기에 사진 추가" },
     { url: "", caption: "여기에 사진 추가" },
     { url: "", caption: "여기에 사진 추가" },
     { url: "", caption: "여기에 사진 추가" }
   ],
-
   closingTitle: "다시 한 번, 생일 축하해 🎉",
   closingDesc: "오늘 하루도, 앞으로의 모든 날도 행복하길."
 };
+
+const STORAGE_KEY = "bdaySiteConfig_v1";
+
+function loadConfig(){
+  try{
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(saved){
+      const parsed = JSON.parse(saved);
+      return Object.assign({}, DEFAULT_CONFIG, parsed);
+    }
+  }catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+}
+
+let CONFIG = loadConfig();
 </script>
 
 <!-- ---------- 게이트 화면 ---------- -->
@@ -502,7 +637,6 @@ const CONFIG = {
 
 <!-- ---------- 본문 ---------- -->
 <div id="content" class="hidden">
-
   <section class="hero">
     <div class="hero-eyebrow" id="heroEyebrow"></div>
     <h1 class="hero-title">
@@ -541,59 +675,192 @@ const CONFIG = {
     <p class="closing-desc" id="closingDesc"></p>
     <button class="replay-btn" id="btnReplay">처음부터 다시 보기</button>
   </section>
-
 </div>
+
+<!-- ---------- 설정 버튼 & 모달 ---------- -->
+<button id="settingsBtn" title="설정">⚙</button>
+<div id="settingsOverlay" class="hidden">
+  <div class="settings-card">
+    <div class="settings-head">
+      <h2>사이트 설정</h2>
+      <button class="settings-close" id="settingsCloseBtn">✕</button>
+    </div>
+    <div class="settings-body">
+
+      <div class="set-group">
+        <div class="set-group-title">기본 정보</div>
+        <div class="set-field">
+          <label>이름/애칭 (게이트에 표시됨)</label>
+          <input type="text" id="f_name">
+        </div>
+      </div>
+
+      <div class="set-group">
+        <div class="set-group-title">도장 · 경고 화면</div>
+        <div class="set-field">
+          <label>도장 문구 (예 클릭 시)</label>
+          <input type="text" id="f_stampText">
+        </div>
+        <div class="set-field">
+          <label>경고 화면 제목</label>
+          <input type="text" id="f_rejectTitle">
+        </div>
+        <div class="set-field">
+          <label>경고 화면 부제</label>
+          <input type="text" id="f_rejectSub">
+        </div>
+        <div class="set-field">
+          <label>경고 이미지 URL (비워두면 이모지 표시)</label>
+          <input type="text" id="f_rejectImageUrl" placeholder="https://...">
+        </div>
+        <div class="set-field">
+          <label>경고 이모지 (이미지 URL 없을 때)</label>
+          <input type="text" id="f_rejectEmoji">
+        </div>
+      </div>
+
+      <div class="set-group">
+        <div class="set-group-title">첫 화면(히어로)</div>
+        <div class="set-field">
+          <label>작은 라벨 문구</label>
+          <input type="text" id="f_heroEyebrow">
+        </div>
+        <div class="set-field">
+          <label>큰 제목 첫 줄</label>
+          <input type="text" id="f_heroTitleTop">
+        </div>
+        <div class="set-field">
+          <label>설명 문구</label>
+          <textarea id="f_heroDesc"></textarea>
+        </div>
+      </div>
+
+      <div class="set-group">
+        <div class="set-group-title">편지</div>
+        <div class="set-field">
+          <label>편지 본문</label>
+          <textarea id="f_letterBody" style="min-height:140px;"></textarea>
+        </div>
+        <div class="set-field">
+          <label>편지 서명</label>
+          <input type="text" id="f_letterSign">
+        </div>
+      </div>
+
+      <div class="set-group">
+        <div class="set-group-title">타임라인</div>
+        <div id="tlWrap" style="display:flex; flex-direction:column; gap:10px;"></div>
+        <button class="dyn-add" id="tlAddBtn">+ 타임라인 항목 추가</button>
+      </div>
+
+      <div class="set-group">
+        <div class="set-group-title">사진첩</div>
+        <div id="phWrap" style="display:flex; flex-direction:column; gap:10px;"></div>
+        <button class="dyn-add" id="phAddBtn">+ 사진 추가</button>
+      </div>
+
+      <div class="set-group">
+        <div class="set-group-title">마무리 화면</div>
+        <div class="set-field">
+          <label>마무리 제목</label>
+          <input type="text" id="f_closingTitle">
+        </div>
+        <div class="set-field">
+          <label>마무리 설명</label>
+          <textarea id="f_closingDesc"></textarea>
+        </div>
+      </div>
+
+    </div>
+    <div class="settings-foot" style="flex-direction:column; align-items:stretch;">
+      <div style="font-size:11px; color:#8a8070; line-height:1.6;">
+        ⚠️ 저장하기는 <b>이 브라우저에만</b> 반영돼요 (남친 화면엔 안 보임).<br>
+        진짜 사이트에도 반영하려면 아래 "코드로 복사"를 누르고, index.html 파일의
+        <code>DEFAULT_CONFIG = { ... }</code> 부분을 통째로 교체한 뒤 GitHub에 다시 저장(Commit)하세요.
+      </div>
+      <div style="display:flex; gap:10px; justify-content:space-between; flex-wrap:wrap;">
+        <button class="set-btn ghost" id="resetBtn">기본값으로 초기화</button>
+        <div style="display:flex; gap:10px;">
+          <button class="set-btn ghost" id="exportBtn">코드로 복사</button>
+          <button class="set-btn primary" id="saveBtn">저장하기(미리보기)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="set-toast" id="toast">저장됐어요!</div>
 
 <script>
 // ---------- 렌더링 ----------
-document.getElementById('gateQuestion').textContent = CONFIG.name + " 입니까?";
-document.getElementById('stampMark').textContent = CONFIG.stampText;
-document.getElementById('rejectTitle').textContent = CONFIG.rejectTitle;
-document.getElementById('rejectSub').textContent = CONFIG.rejectSub;
-document.getElementById('heroEyebrow').textContent = CONFIG.heroEyebrow;
-document.getElementById('heroTitleTop').textContent = CONFIG.heroTitleTop;
-document.getElementById('heroName').textContent = CONFIG.name + "야!";
-document.getElementById('heroDesc').textContent = CONFIG.heroDesc;
-document.getElementById('letterBody').textContent = CONFIG.letterBody;
-document.getElementById('letterSign').textContent = CONFIG.letterSign;
-document.getElementById('closingTitle').textContent = CONFIG.closingTitle;
-document.getElementById('closingDesc').textContent = CONFIG.closingDesc;
+function renderSite(){
+  document.getElementById('gateQuestion').textContent = CONFIG.name + " 입니까?";
+  document.getElementById('stampMark').textContent = CONFIG.stampText;
+  document.getElementById('rejectTitle').textContent = CONFIG.rejectTitle;
+  document.getElementById('rejectSub').textContent = CONFIG.rejectSub;
+  document.getElementById('heroEyebrow').textContent = CONFIG.heroEyebrow;
+  document.getElementById('heroTitleTop').textContent = CONFIG.heroTitleTop;
+  document.getElementById('heroName').textContent = CONFIG.name + "야!";
+  document.getElementById('heroDesc').textContent = CONFIG.heroDesc;
+  document.getElementById('letterBody').textContent = CONFIG.letterBody;
+  document.getElementById('letterSign').textContent = CONFIG.letterSign;
+  document.getElementById('closingTitle').textContent = CONFIG.closingTitle;
+  document.getElementById('closingDesc').textContent = CONFIG.closingDesc;
 
-if(CONFIG.rejectImageUrl){
   const img = document.getElementById('rejectImg');
-  img.src = CONFIG.rejectImageUrl;
-  img.classList.remove('hidden');
-} else {
-  document.getElementById('rejectEmojiEl').textContent = CONFIG.rejectEmoji;
-}
-
-const tlWrap = document.getElementById('timelineWrap');
-CONFIG.timeline.forEach(item=>{
-  const el = document.createElement('div');
-  el.className = 'tl-item';
-  el.innerHTML = `
-    <div class="tl-date">${item.date}</div>
-    <div class="tl-title">${item.title}</div>
-    <div class="tl-desc">${item.desc}</div>
-  `;
-  tlWrap.appendChild(el);
-});
-
-const galleryWrap = document.getElementById('galleryWrap');
-CONFIG.photos.forEach(p=>{
-  const el = document.createElement('div');
-  el.className = 'polaroid';
-  if(p.url){
-    el.innerHTML = `<img class="polaroid-img" src="${p.url}" alt="${p.caption||''}">
-      <div class="polaroid-caption">${p.caption||''}</div>`;
+  const emojiEl = document.getElementById('rejectEmojiEl');
+  if(CONFIG.rejectImageUrl){
+    img.src = CONFIG.rejectImageUrl;
+    img.classList.remove('hidden');
+    emojiEl.classList.add('hidden');
   } else {
-    el.innerHTML = `<div class="polaroid-placeholder">📷<br>${p.caption||'사진을 추가해주세요'}</div>
-      <div class="polaroid-caption">${p.caption||''}</div>`;
+    img.classList.add('hidden');
+    emojiEl.classList.remove('hidden');
+    emojiEl.textContent = CONFIG.rejectEmoji;
   }
-  galleryWrap.appendChild(el);
-});
 
-// ---------- 인터랙션 ----------
+  const tlWrap = document.getElementById('timelineWrap');
+  tlWrap.innerHTML = "";
+  CONFIG.timeline.forEach(item=>{
+    const el = document.createElement('div');
+    el.className = 'tl-item';
+    el.innerHTML = `
+      <div class="tl-date"></div>
+      <div class="tl-title"></div>
+      <div class="tl-desc"></div>
+    `;
+    el.querySelector('.tl-date').textContent = item.date;
+    el.querySelector('.tl-title').textContent = item.title;
+    el.querySelector('.tl-desc').textContent = item.desc;
+    tlWrap.appendChild(el);
+  });
+
+  const galleryWrap = document.getElementById('galleryWrap');
+  galleryWrap.innerHTML = "";
+  CONFIG.photos.forEach(p=>{
+    const el = document.createElement('div');
+    el.className = 'polaroid';
+    if(p.url){
+      const img2 = document.createElement('img');
+      img2.className = 'polaroid-img';
+      img2.src = p.url;
+      img2.alt = p.caption || '';
+      el.appendChild(img2);
+    } else {
+      const ph = document.createElement('div');
+      ph.className = 'polaroid-placeholder';
+      ph.innerHTML = '📷<br>' + (p.caption ? '' : '사진을 추가해주세요');
+      el.appendChild(ph);
+    }
+    const cap = document.createElement('div');
+    cap.className = 'polaroid-caption';
+    cap.textContent = p.caption || '';
+    el.appendChild(cap);
+    galleryWrap.appendChild(el);
+  });
+}
+renderSite();
+
+// ---------- 게이트/도장/경고 인터랙션 ----------
 const gate = document.getElementById('gate');
 const splash = document.getElementById('stamp-splash');
 const stampMark = document.getElementById('stampMark');
@@ -604,7 +871,7 @@ document.getElementById('btnYes').addEventListener('click', ()=>{
   gate.classList.add('hidden');
   splash.classList.remove('hidden');
   stampMark.classList.remove('slam');
-  void stampMark.offsetWidth; // reflow to restart animation
+  void stampMark.offsetWidth;
   stampMark.classList.add('slam');
   setTimeout(()=>{
     splash.classList.add('hidden');
@@ -639,6 +906,190 @@ function initReveal(){
   }, { threshold:0.15 });
   items.forEach(i=>io.observe(i));
 }
+
+// ---------- 설정 패널 ----------
+const settingsBtn = document.getElementById('settingsBtn');
+const settingsOverlay = document.getElementById('settingsOverlay');
+const toast = document.getElementById('toast');
+
+function showToast(msg){
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(()=> toast.classList.remove('show'), 1800);
+}
+
+function openSettings(){
+  fillFormFromConfig();
+  settingsOverlay.classList.remove('hidden');
+}
+function closeSettings(){
+  settingsOverlay.classList.add('hidden');
+}
+
+settingsBtn.addEventListener('click', openSettings);
+document.getElementById('settingsCloseBtn').addEventListener('click', closeSettings);
+settingsOverlay.addEventListener('click', (e)=>{
+  if(e.target === settingsOverlay) closeSettings();
+});
+
+function fillFormFromConfig(){
+  document.getElementById('f_name').value = CONFIG.name;
+  document.getElementById('f_stampText').value = CONFIG.stampText;
+  document.getElementById('f_rejectTitle').value = CONFIG.rejectTitle;
+  document.getElementById('f_rejectSub').value = CONFIG.rejectSub;
+  document.getElementById('f_rejectImageUrl').value = CONFIG.rejectImageUrl;
+  document.getElementById('f_rejectEmoji').value = CONFIG.rejectEmoji;
+  document.getElementById('f_heroEyebrow').value = CONFIG.heroEyebrow;
+  document.getElementById('f_heroTitleTop').value = CONFIG.heroTitleTop;
+  document.getElementById('f_heroDesc').value = CONFIG.heroDesc;
+  document.getElementById('f_letterBody').value = CONFIG.letterBody;
+  document.getElementById('f_letterSign').value = CONFIG.letterSign;
+  document.getElementById('f_closingTitle').value = CONFIG.closingTitle;
+  document.getElementById('f_closingDesc').value = CONFIG.closingDesc;
+
+  renderDynList('tlWrap', CONFIG.timeline, [
+    {key:'date', label:'날짜', placeholder:'예: 2026.07'},
+    {key:'title', label:'제목', placeholder:'예: 처음 만난 날'},
+    {key:'desc', label:'설명', placeholder:'짧은 설명', textarea:true}
+  ]);
+  renderDynList('phWrap', CONFIG.photos, [
+    {key:'url', label:'사진 URL', placeholder:'https://... (비워두면 placeholder)'},
+    {key:'caption', label:'캡션', placeholder:'사진 설명'}
+  ]);
+}
+
+function renderDynList(wrapId, arr, fields){
+  const wrap = document.getElementById(wrapId);
+  wrap.innerHTML = "";
+  arr.forEach((item, idx)=>{
+    const row = document.createElement('div');
+    row.className = 'dyn-item';
+    row.dataset.idx = idx;
+    fields.forEach(f=>{
+      const fieldWrap = document.createElement('div');
+      fieldWrap.className = 'set-field';
+      const label = document.createElement('label');
+      label.textContent = f.label;
+      const inputEl = document.createElement(f.textarea ? 'textarea' : 'input');
+      if(!f.textarea) inputEl.type = 'text';
+      inputEl.placeholder = f.placeholder || '';
+      inputEl.value = item[f.key] || '';
+      inputEl.dataset.field = f.key;
+      fieldWrap.appendChild(label);
+      fieldWrap.appendChild(inputEl);
+      row.appendChild(fieldWrap);
+    });
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'dyn-remove';
+    removeBtn.textContent = '이 항목 삭제';
+    removeBtn.addEventListener('click', ()=>{ row.remove(); });
+    row.appendChild(removeBtn);
+    wrap.appendChild(row);
+  });
+}
+
+document.getElementById('tlAddBtn').addEventListener('click', ()=>{
+  const wrap = document.getElementById('tlWrap');
+  const current = readDynList('tlWrap', ['date','title','desc']);
+  current.push({date:'', title:'', desc:''});
+  renderDynList('tlWrap', current, [
+    {key:'date', label:'날짜', placeholder:'예: 2026.07'},
+    {key:'title', label:'제목', placeholder:'예: 처음 만난 날'},
+    {key:'desc', label:'설명', placeholder:'짧은 설명', textarea:true}
+  ]);
+});
+
+document.getElementById('phAddBtn').addEventListener('click', ()=>{
+  const current = readDynList('phWrap', ['url','caption']);
+  current.push({url:'', caption:''});
+  renderDynList('phWrap', current, [
+    {key:'url', label:'사진 URL', placeholder:'https://... (비워두면 placeholder)'},
+    {key:'caption', label:'캡션', placeholder:'사진 설명'}
+  ]);
+});
+
+function readDynList(wrapId, keys){
+  const wrap = document.getElementById(wrapId);
+  const rows = Array.from(wrap.querySelectorAll('.dyn-item'));
+  return rows.map(row=>{
+    const obj = {};
+    keys.forEach(k=>{
+      const inputEl = row.querySelector(`[data-field="${k}"]`);
+      obj[k] = inputEl ? inputEl.value : '';
+    });
+    return obj;
+  });
+}
+
+document.getElementById('saveBtn').addEventListener('click', ()=>{
+  CONFIG.name = document.getElementById('f_name').value || DEFAULT_CONFIG.name;
+  CONFIG.stampText = document.getElementById('f_stampText').value;
+  CONFIG.rejectTitle = document.getElementById('f_rejectTitle').value;
+  CONFIG.rejectSub = document.getElementById('f_rejectSub').value;
+  CONFIG.rejectImageUrl = document.getElementById('f_rejectImageUrl').value;
+  CONFIG.rejectEmoji = document.getElementById('f_rejectEmoji').value;
+  CONFIG.heroEyebrow = document.getElementById('f_heroEyebrow').value;
+  CONFIG.heroTitleTop = document.getElementById('f_heroTitleTop').value;
+  CONFIG.heroDesc = document.getElementById('f_heroDesc').value;
+  CONFIG.letterBody = document.getElementById('f_letterBody').value;
+  CONFIG.letterSign = document.getElementById('f_letterSign').value;
+  CONFIG.closingTitle = document.getElementById('f_closingTitle').value;
+  CONFIG.closingDesc = document.getElementById('f_closingDesc').value;
+  CONFIG.timeline = readDynList('tlWrap', ['date','title','desc']);
+  CONFIG.photos = readDynList('phWrap', ['url','caption']);
+
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(CONFIG));
+  }catch(e){}
+
+  renderSite();
+  closeSettings();
+  showToast('저장됐어요! 이 브라우저에 반영됐어요.');
+});
+
+document.getElementById('exportBtn').addEventListener('click', ()=>{
+  // 현재 폼에 입력된 값을 기준으로 CONFIG를 최신화한 뒤 코드 문자열 생성
+  const tmp = {
+    name: document.getElementById('f_name').value || DEFAULT_CONFIG.name,
+    stampText: document.getElementById('f_stampText').value,
+    rejectImageUrl: document.getElementById('f_rejectImageUrl').value,
+    rejectEmoji: document.getElementById('f_rejectEmoji').value,
+    rejectTitle: document.getElementById('f_rejectTitle').value,
+    rejectSub: document.getElementById('f_rejectSub').value,
+    heroEyebrow: document.getElementById('f_heroEyebrow').value,
+    heroTitleTop: document.getElementById('f_heroTitleTop').value,
+    heroDesc: document.getElementById('f_heroDesc').value,
+    letterBody: document.getElementById('f_letterBody').value,
+    letterSign: document.getElementById('f_letterSign').value,
+    timeline: readDynList('tlWrap', ['date','title','desc']),
+    photos: readDynList('phWrap', ['url','caption']),
+    closingTitle: document.getElementById('f_closingTitle').value,
+    closingDesc: document.getElementById('f_closingDesc').value
+  };
+  const code = "const DEFAULT_CONFIG = " + JSON.stringify(tmp, null, 2) + ";";
+
+  const finish = (ok)=>{
+    showToast(ok ? '코드가 복사됐어요! index.html의 DEFAULT_CONFIG 부분에 붙여넣으세요.' : '복사에 실패했어요. 아래 창에서 직접 복사해주세요.');
+    if(!ok){
+      window.prompt('복사가 안 됐다면 아래 내용을 직접 선택해서 복사하세요 (Ctrl+C):', code);
+    }
+  };
+
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(code).then(()=>finish(true)).catch(()=>finish(false));
+  } else {
+    finish(false);
+  }
+});
+
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  if(!confirm('정말 기본값으로 초기화할까요? 지금까지 수정한 내용이 사라져요.')) return;
+  try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+  CONFIG = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+  renderSite();
+  fillFormFromConfig();
+  showToast('기본값으로 초기화했어요.');
+});
 </script>
 
 </body>
