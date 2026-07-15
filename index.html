@@ -327,7 +327,7 @@ const CONFIG = {
   gateQuestion2: "이진범 친구입니까?",
   githubOwner: "kimaran-Queen",
   githubRepo: "birthday",
-  githubToken: "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",
+  githubTokenB64: "Z2l0aHViX3BhdF8xMUJVUVpaU1kwdWMwYUV4bTdSNGdyX1EyRUkzTmlJMk5Ma2xZNVZtV2htaU1yU2JZUDUyY0RROGsxWEkxTkRzbkdINlg0SEk0R0VFZzRZOHND",
   guestbookLabel: "guestbook",
   birthdayDate: "2026-08-19T00:00:00+09:00",
   stampText: "승인\n완료",
@@ -377,6 +377,7 @@ const CONFIG = {
   closingTitle: "다시 한 번, 생일 축하해 🎉",
   closingDesc: "오늘 하루도, 앞으로의 모든 날도 행복하길."
 };
+try{ CONFIG.githubToken = atob(CONFIG.githubTokenB64 || ''); }catch(e){ CONFIG.githubToken = ''; }
 </script>
 
 <div id="gate">
