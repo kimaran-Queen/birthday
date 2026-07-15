@@ -781,16 +781,17 @@ document.getElementById('btnGbSend').addEventListener('click', async ()=>{
   const items = await fetchGuestbookItems(bucketId);
   items.push({ name, message, time: new Date().toISOString() });
   try{
-    await fetch(`https://kvdb.io/${bucketId}/guestbook`, {
-      method:'PUT',
-      headers:{'Content-Type':'application/json'},
+    const putRes = await fetch(`https://kvdb.io/${bucketId}/guestbook`, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain'},
       body: JSON.stringify(items)
     });
+    if(!putRes.ok) throw new Error('save failed: ' + putRes.status);
     msgEl.value = '';
     if(status) status.textContent = '축하 메세지 등록 완료! 🎉';
     renderGuestbookList(items);
   }catch(e){
-    if(status) status.textContent = '전송 실패했어요. 다시 시도해줘.';
+    if(status) status.textContent = '전송 실패했어요 ㅠ 네트워크를 확인하고 다시 시도해줘. (' + e.message + ')';
   }
 });
 </script>
