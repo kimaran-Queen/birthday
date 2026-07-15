@@ -680,18 +680,20 @@ const GB_LOCAL_KEY = 'bday_guestbook_bucket_v1';
 
 async function ensureGuestbookBucket(){
   if(CONFIG.guestbookBucketId) return CONFIG.guestbookBucketId;
+  const idPattern = /^[A-Za-z0-9_-]{10,40}$/;
   let id = null;
   try{ id = localStorage.getItem(GB_LOCAL_KEY); }catch(e){}
-  if(id){ CONFIG.guestbookBucketId = id; return id; }
+  if(id && idPattern.test(id)){ CONFIG.guestbookBucketId = id; return id; }
+  if(id){ try{ localStorage.removeItem(GB_LOCAL_KEY); }catch(e){} } // 예전에 잘못 저장된 값 제거
   try{
-    const res = await fetch('https://kvdb.io/', { method:'POST' });
-    const newId = (await res.text()).trim();
-    if(!newId) throw new Error('empty id');
-    fetch(`https://kvdb.io/${newId}`, {
-      method:'PATCH',
+    const res = await fetch('https://kvdb.io/', {
+      method:'POST',
       headers:{'Content-Type':'application/x-www-form-urlencoded'},
-      body:'default_ttl=0'
-    }).catch(()=>{});
+      body:'email=' + encodeURIComponent('noreply.bday.site@gmail.com')
+    });
+    if(!res.ok) throw new Error('bucket create failed: ' + res.status);
+    const newId = (await res.text()).trim();
+    if(!idPattern.test(newId)) throw new Error('invalid bucket id received');
     CONFIG.guestbookBucketId = newId;
     try{ localStorage.setItem(GB_LOCAL_KEY, newId); }catch(e){}
     const status = document.getElementById('gbStatus');
@@ -700,6 +702,8 @@ async function ensureGuestbookBucket(){
     }
     return newId;
   }catch(e){
+    const status = document.getElementById('gbStatus');
+    if(status){ status.textContent = '저장소 연결에 실패했어요 ㅠ 네트워크를 확인하고 다시 시도해줘.'; }
     return null;
   }
 }
