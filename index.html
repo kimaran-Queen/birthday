@@ -324,6 +324,7 @@ body{
 <script>
 const CONFIG = {
   gateQuestion: "이진범 본인 입니까?",
+  passcode: "0413",
   gateQuestion2: "이진범 친구입니까?",
   jsonbinBinId: "6a575547da38895dfe602f89",
   jsonbinMasterKey: "$2a$10$Irf5pM5mXI5X6cwqcXKyU.rN9ShP2eL89cxqNYKIydTMoEWWS2Nde",
@@ -393,6 +394,23 @@ const CONFIG = {
 
 <div id="stamp-splash" class="hidden">
   <div class="stamp-mark" id="stampMark"></div>
+</div>
+
+<div id="passGate" class="hidden" style="min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;">
+  <div class="doc-card">
+    <div class="doc-eyebrow">최종 확인 절차</div>
+    <div class="doc-title">— 암호 입력 서류 —</div>
+    <div class="doc-question" style="font-size:22px;">암호 4자리를 입력하세요</div>
+    <div class="doc-sub" id="passHint">힌트: 김아란 생일</div>
+    <div style="display:flex; justify-content:center; margin:10px 0 6px;">
+      <input type="tel" id="passInput" maxlength="4" inputmode="numeric" pattern="[0-9]*"
+        style="width:160px; text-align:center; font-size:26px; letter-spacing:14px; padding:10px 0; border:2px solid var(--ink); background:var(--paper); color:var(--ink); font-family:'Black Han Sans', sans-serif;">
+    </div>
+    <div id="passError" style="text-align:center; font-size:12px; color:var(--stamp-red); min-height:16px; margin-bottom:10px;"></div>
+    <div class="doc-buttons">
+      <button class="doc-btn yes" id="btnPassSubmit">확인</button>
+    </div>
+  </div>
 </div>
 
 <div id="gate2" class="hidden" style="min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;">
@@ -570,6 +588,7 @@ CONFIG.photos.forEach(p=>{
 
 const gate = document.getElementById('gate');
 const gate2 = document.getElementById('gate2');
+const passGate = document.getElementById('passGate');
 const friendReject = document.getElementById('friendReject');
 const splash = document.getElementById('stamp-splash');
 const stampMark = document.getElementById('stampMark');
@@ -618,8 +637,7 @@ function spawnChaosImg(){
   setTimeout(()=>{ el.remove(); }, 650);
 }
 
-document.getElementById('btnYes').addEventListener('click', ()=>{
-  gate.classList.add('hidden');
+function runStampAndReveal(){
   splash.classList.remove('hidden');
   stampMark.classList.remove('slam');
   void stampMark.offsetWidth;
@@ -630,6 +648,33 @@ document.getElementById('btnYes').addEventListener('click', ()=>{
     initReveal();
     window.scrollTo(0,0);
   }, 1100);
+}
+
+document.getElementById('btnYes').addEventListener('click', ()=>{
+  gate.classList.add('hidden');
+  passGate.classList.remove('hidden');
+  const passInput = document.getElementById('passInput');
+  passInput.value = '';
+  document.getElementById('passError').textContent = '';
+  setTimeout(()=> passInput.focus(), 100);
+});
+
+function checkPasscode(){
+  const passInput = document.getElementById('passInput');
+  const errEl = document.getElementById('passError');
+  if(passInput.value.trim() === CONFIG.passcode){
+    passGate.classList.add('hidden');
+    runStampAndReveal();
+  } else {
+    errEl.textContent = '암호가 틀렸어요. 다시 입력해줘!';
+    passInput.value = '';
+    passInput.focus();
+  }
+}
+
+document.getElementById('btnPassSubmit').addEventListener('click', checkPasscode);
+document.getElementById('passInput').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter') checkPasscode();
 });
 
 document.getElementById('btnNo').addEventListener('click', ()=>{
