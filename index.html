@@ -325,7 +325,7 @@ body{
 const CONFIG = {
   gateQuestion: "이진범 본인 입니까?",
   gateQuestion2: "이진범 친구입니까?",
-  guestbookBucketId: "",
+  guestbookBucketId: "7yAazGqKAAvmrAaX29vp6g",
   birthdayDate: "2026-08-19T00:00:00+09:00",
   stampText: "승인\n완료",
 
@@ -423,6 +423,7 @@ const CONFIG = {
     </div>
     <button class="doc-btn yes" id="btnGbSend" style="width:100%; margin-top:14px;">메세지 보내기</button>
     <div id="gbStatus" style="font-size:12px; color:#7a7266; margin-top:10px; text-align:center; line-height:1.5;"></div>
+    <div id="gbBucketInfo" style="font-size:11px; color:#a89d87; margin-top:6px; text-align:center; line-height:1.6;"></div>
 
     <div style="margin-top:28px; border-top:1.5px dashed var(--line-grey); padding-top:16px;">
       <div class="doc-eyebrow" style="text-align:left; margin-bottom:10px;">이진범을 축하한 사람들</div>
@@ -696,10 +697,7 @@ async function ensureGuestbookBucket(){
     if(!idPattern.test(newId)) throw new Error('invalid bucket id received');
     CONFIG.guestbookBucketId = newId;
     try{ localStorage.setItem(GB_LOCAL_KEY, newId); }catch(e){}
-    const status = document.getElementById('gbStatus');
-    if(status){
-      status.innerHTML = `⚠️ 최초 설정: 이 저장소 ID를 코드의 <b>guestbookBucketId</b>에 붙여넣고 다시 배포해야 모두가 같은 방명록을 보게 돼요 → <b>${newId}</b>`;
-    }
+    showBucketIdBanner(newId, true);
     return newId;
   }catch(e){
     const status = document.getElementById('gbStatus');
@@ -744,6 +742,18 @@ function renderGuestbookList(items){
   });
 }
 
+function showBucketIdBanner(id, isNew){
+  const el = document.getElementById('gbBucketInfo');
+  if(!el) return;
+  if(isNew){
+    el.innerHTML = `⚠️ <b>최초 설정 필요</b>: 저장소 ID <b>${id}</b> 를 코드의 guestbookBucketId 에 붙여넣고 다시 배포해줘! (이거 안 하면 이 브라우저에서만 방명록이 보여요)`;
+  } else if(!CONFIG.guestbookBucketId || CONFIG.guestbookBucketId !== id){
+    el.innerHTML = `현재 저장소 ID: <b>${id}</b>`;
+  } else {
+    el.textContent = '';
+  }
+}
+
 async function loadGuestbook(){
   const listEl = document.getElementById('gbList');
   if(listEl) listEl.innerHTML = '<div style="font-size:13px; color:#9c9384;">불러오는 중...</div>';
@@ -752,6 +762,7 @@ async function loadGuestbook(){
     if(listEl) listEl.innerHTML = '<div style="font-size:13px; color:#9c9384;">방명록을 불러올 수 없어요. 네트워크를 확인해줘.</div>';
     return;
   }
+  showBucketIdBanner(bucketId, false);
   const items = await fetchGuestbookItems(bucketId);
   renderGuestbookList(items);
 }
