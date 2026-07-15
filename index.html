@@ -325,10 +325,8 @@ body{
 const CONFIG = {
   gateQuestion: "이진범 본인 입니까?",
   gateQuestion2: "이진범 친구입니까?",
-  githubOwner: "kimaran-Queen",
-  githubRepo: "birthday",
-  githubTokenB64: "Z2l0aHViX3BhdF8xMUJVUVpaU1kwQ1lXZUV4aHFhdHpPX1htbUVZWGtPSmEzaUU5RGlyRDFsZVlsTXhGYWU2em5NYWxmcWF3bWpwdWNCUjRaV0ZUVnAxbXppMkd1",
-  guestbookLabel: "guestbook",
+  jsonbinBinId: "6a575547da38895dfe602f89",
+  jsonbinMasterKey: "$2a$10$Irf5pM5mXI5X6cwqcXKyU.rN9ShP2eL89cxqNYKIydTMoEWWS2Nde",
   birthdayDate: "2026-08-19T00:00:00+09:00",
   stampText: "승인\n완료",
 
@@ -377,7 +375,6 @@ const CONFIG = {
   closingTitle: "다시 한 번, 생일 축하해 🎉",
   closingDesc: "오늘 하루도, 앞으로의 모든 날도 행복하길."
 };
-try{ CONFIG.githubToken = atob(CONFIG.githubTokenB64 || ''); }catch(e){ CONFIG.githubToken = ''; }
 </script>
 
 <div id="gate">
@@ -679,24 +676,20 @@ function initReveal(){
   items.forEach(i=>io.observe(i));
 }
 
-// ---------- 방명록(축하 메세지, GitHub Issues 기반) ----------
-function ghApiBase(){
-  return `https://api.github.com/repos/${CONFIG.githubOwner}/${CONFIG.githubRepo}/issues`;
+// ---------- 방명록(축하 메세지, jsonbin.io 기반) ----------
+function jsonbinUrl(){
+  return `https://api.jsonbin.io/v3/b/${CONFIG.jsonbinBinId}`;
 }
 
 async function fetchGuestbookItems(){
   try{
-    const res = await fetch(`${ghApiBase()}?labels=${encodeURIComponent(CONFIG.guestbookLabel)}&state=all&per_page=100&sort=created&direction=desc`, {
-      headers:{ 'Accept':'application/vnd.github+json' }
+    const res = await fetch(`${jsonbinUrl()}/latest`, {
+      headers:{ 'X-Master-Key': CONFIG.jsonbinMasterKey }
     });
     if(!res.ok) return [];
     const data = await res.json();
-    if(!Array.isArray(data)) return [];
-    return data.map(issue => ({
-      name: issue.title || '익명',
-      message: issue.body || '',
-      time: issue.created_at
-    }));
+    const messages = data && data.record && Array.isArray(data.record.messages) ? data.record.messages : [];
+    return messages;
   }catch(e){
     return [];
   }
@@ -710,7 +703,7 @@ function renderGuestbookList(items){
     return;
   }
   listEl.innerHTML = '';
-  items.forEach(item=>{
+  items.slice().reverse().forEach(item=>{
     const card = document.createElement('div');
     card.className = 'gb-item';
     const name = document.createElement('div');
@@ -739,29 +732,22 @@ document.getElementById('btnGbSend').addEventListener('click', async ()=>{
   const name = nameEl.value.trim() || '익명';
   const message = msgEl.value.trim();
   if(!message){ if(status) status.textContent = '메세지를 입력해줘!'; return; }
-  if(!CONFIG.githubToken){
-    if(status) status.textContent = '아직 전송 기능이 설정 안 됐어요 (관리자에게 문의).';
-    return;
-  }
   if(status) status.textContent = '보내는 중...';
   try{
-    const res = await fetch(ghApiBase(), {
-      method:'POST',
+    const items = await fetchGuestbookItems();
+    items.push({ name, message, time: new Date().toISOString() });
+    const res = await fetch(jsonbinUrl(), {
+      method:'PUT',
       headers:{
-        'Accept':'application/vnd.github+json',
-        'Authorization': 'Bearer ' + CONFIG.githubToken,
-        'Content-Type':'application/json'
+        'Content-Type':'application/json',
+        'X-Master-Key': CONFIG.jsonbinMasterKey
       },
-      body: JSON.stringify({
-        title: name,
-        body: message,
-        labels: [CONFIG.guestbookLabel]
-      })
+      body: JSON.stringify({ messages: items })
     });
     if(!res.ok) throw new Error('save failed: ' + res.status);
     msgEl.value = '';
     if(status) status.textContent = '축하 메세지 등록 완료! 🎉';
-    loadGuestbook();
+    renderGuestbookList(items);
   }catch(e){
     if(status) status.textContent = '전송 실패했어요 ㅠ 네트워크를 확인하고 다시 시도해줘. (' + e.message + ')';
   }
@@ -769,4 +755,4 @@ document.getElementById('btnGbSend').addEventListener('click', async ()=>{
 </script>
 
 </body>
-</html>  
+</html>
