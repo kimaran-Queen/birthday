@@ -405,6 +405,19 @@ body{
 .tape.tr{ top:-14px; right:20px; transform:rotate(5deg); }
 .letter-body{ font-family:'Gaegu', sans-serif; font-size:20px; line-height:2; white-space:pre-line; }
 .letter-sign{ font-family:'Gaegu', sans-serif; font-size:20px; text-align:right; margin-top:24px; font-weight:700; }
+.letter-locked{
+  display:flex; flex-direction:column; align-items:center; gap:12px;
+  padding:20px 10px;
+  text-align:center;
+}
+.letter-locked-icon{ font-size:40px; }
+.letter-locked-text{
+  font-family:'Gaegu', sans-serif;
+  font-size:18px;
+  color:#6b6255;
+  line-height:1.6;
+  white-space:pre-line;
+}
 
 .timeline{ border-left:2px dashed var(--line-grey); padding-left:28px; display:flex; flex-direction:column; gap:36px; }
 .tl-item{ position:relative; }
@@ -456,9 +469,8 @@ body{
      ============================================================ -->
 <script>
 const CONFIG = {
-  gateQuestion: "이진범 본인 입니까?",
+  gateQuestion: "이진범 본인 또는 친구입니까?",
   passcode: "0413",
-  gateQuestion2: "이진범 친구입니까?",
   jsonbinBinId: "6a575547da38895dfe602f89",
   jsonbinMasterKey: "$2a$10$Irf5pM5mXI5X6cwqcXKyU.rN9ShP2eL89cxqNYKIydTMoEWWS2Nde",
   birthdayDate: "2026-08-19T00:00:00+09:00",
@@ -523,10 +535,11 @@ const CONFIG = {
     <div class="doc-eyebrow">본인 확인 절차</div>
     <div class="doc-title">— by 개발자 김아란 —</div>
     <div class="doc-question" id="gateQuestion"></div>
-    <div class="doc-sub">아래 항목 중 하나를 선택해주세요</div>
-    <div class="doc-buttons">
-      <button class="doc-btn yes" id="btnYes">예</button>
-      <button class="doc-btn no" id="btnNo">아니요</button>
+    <div class="doc-sub">해당하는 항목을 선택해주세요</div>
+    <div class="doc-buttons" style="flex-wrap:wrap;">
+      <button class="doc-btn yes" id="btnYes">본인이에요</button>
+      <button class="doc-btn no" id="btnFriend">친구예요</button>
+      <button class="doc-btn no" id="btnNo">둘 다 아니에요</button>
     </div>
     <div class="doc-check" id="countdownText">생일까지 남은 시간 계산 중...</div>
   </div>
@@ -551,20 +564,6 @@ const CONFIG = {
       <button class="doc-btn yes" id="btnPassSubmit">확인</button>
       <button class="doc-btn no" id="btnPassExit">나가기</button>
     </div>
-  </div>
-</div>
-
-<div id="gate2" class="hidden" style="min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;">
-  <div class="doc-card">
-    <div class="doc-eyebrow">2차 확인 절차</div>
-    <div class="doc-title">— 재확인 서류 —</div>
-    <div class="doc-question" id="gateQuestion2"></div>
-    <div class="doc-sub">아래 항목 중 하나를 선택해주세요</div>
-    <div class="doc-buttons">
-      <button class="doc-btn yes" id="btnYes2">예</button>
-      <button class="doc-btn no" id="btnNo2">아니요</button>
-    </div>
-    <div class="doc-check">본인이 아니면 친구인지 확인합니다.</div>
   </div>
 </div>
 
@@ -623,8 +622,12 @@ const CONFIG = {
     <div class="letter-card">
       <div class="tape tl"></div>
       <div class="tape tr"></div>
-      <div class="letter-body" id="letterBody"></div>
-      <div class="letter-sign" id="letterSign"></div>
+      <div class="letter-body hidden" id="letterBody"></div>
+      <div class="letter-sign hidden" id="letterSign"></div>
+      <div class="letter-locked" id="letterLocked">
+        <div class="letter-locked-icon">🔒</div>
+        <div class="letter-locked-text" id="letterLockedText">이 편지는 생일 당일부터 열어볼 수 있어요</div>
+      </div>
     </div>
   </section>
 
@@ -701,7 +704,6 @@ const CONFIG = {
 
 <script>
 document.getElementById('gateQuestion').textContent = CONFIG.gateQuestion;
-document.getElementById('gateQuestion2').textContent = CONFIG.gateQuestion2;
 
 function updateCountdown(){
   const el = document.getElementById('countdownText');
@@ -728,8 +730,29 @@ document.getElementById('heroEyebrow').textContent = CONFIG.heroEyebrow;
 document.getElementById('heroTitleTop').textContent = CONFIG.heroTitleTop;
 document.getElementById('heroName').textContent = CONFIG.heroName;
 document.getElementById('heroDesc').textContent = CONFIG.heroDesc;
-document.getElementById('letterBody').textContent = CONFIG.letterBody;
-document.getElementById('letterSign').textContent = CONFIG.letterSign;
+function renderLetterLock(){
+  const bodyEl = document.getElementById('letterBody');
+  const signEl = document.getElementById('letterSign');
+  const lockedEl = document.getElementById('letterLocked');
+  const target = new Date(CONFIG.birthdayDate).getTime();
+  const reached = Date.now() >= target;
+  if(reached){
+    bodyEl.textContent = CONFIG.letterBody;
+    signEl.textContent = CONFIG.letterSign;
+    bodyEl.classList.remove('hidden');
+    signEl.classList.remove('hidden');
+    lockedEl.classList.add('hidden');
+  } else {
+    const d = new Date(target);
+    const m = d.getMonth() + 1, day = d.getDate();
+    document.getElementById('letterLockedText').textContent =
+      `이 편지는 생일 당일(${m}월 ${day}일)부터 열어볼 수 있어요 🔒\n조금만 기다려줘!`;
+    bodyEl.classList.add('hidden');
+    signEl.classList.add('hidden');
+    lockedEl.classList.remove('hidden');
+  }
+}
+renderLetterLock();
 document.getElementById('closingTitle').textContent = CONFIG.closingTitle;
 document.getElementById('closingDesc').textContent = CONFIG.closingDesc;
 
@@ -1074,7 +1097,6 @@ document.getElementById('btnRetake').addEventListener('click', ()=>{
 });
 
 const gate = document.getElementById('gate');
-const gate2 = document.getElementById('gate2');
 const passGate = document.getElementById('passGate');
 const friendReject = document.getElementById('friendReject');
 const splash = document.getElementById('stamp-splash');
@@ -1171,19 +1193,14 @@ document.getElementById('passInput').addEventListener('keydown', (e)=>{
 
 document.getElementById('btnNo').addEventListener('click', ()=>{
   gate.classList.add('hidden');
-  gate2.classList.remove('hidden');
-});
-
-document.getElementById('btnYes2').addEventListener('click', ()=>{
-  gate2.classList.add('hidden');
-  friendReject.classList.remove('hidden');
-  loadGuestbook();
-});
-
-document.getElementById('btnNo2').addEventListener('click', ()=>{
-  gate2.classList.add('hidden');
   reject.classList.remove('hidden');
   startChaos();
+});
+
+document.getElementById('btnFriend').addEventListener('click', ()=>{
+  gate.classList.add('hidden');
+  friendReject.classList.remove('hidden');
+  loadGuestbook();
 });
 
 document.getElementById('btnFriendBack').addEventListener('click', ()=>{
