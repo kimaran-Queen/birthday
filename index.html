@@ -129,6 +129,83 @@ body{
 .gb-item-name{ font-weight:700; font-size:13px; margin-bottom:4px; color:var(--stamp-red); }
 .gb-item-msg{ font-size:13px; color:#4a453d; white-space:pre-line; line-height:1.5; }
 
+.shell-wrap{ display:flex; flex-direction:column; align-items:center; gap:18px; }
+.shell-row{ position:relative; height:86px; margin:0 auto; }
+.shell-cup{
+  width:74px; height:86px;
+  background:var(--ink);
+  color:var(--white-card);
+  border-radius:8px 8px 34px 34px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Black Han Sans', sans-serif;
+  font-size:28px;
+  position:relative;
+  box-shadow:4px 4px 0 var(--paper-dark);
+}
+.shell-cup.pickable{ cursor:pointer; transition:transform 0.15s ease; }
+.shell-cup.pickable:hover{ transform:translateY(-8px); }
+.shell-cup.shuffling{ animation: shellShuffle 0.3s ease-in-out infinite alternate; }
+.shell-cup.revealed{
+  background:var(--white-card);
+  color:var(--ink);
+  border:2px solid var(--stamp-red);
+  flex-direction:column;
+  gap:2px;
+  box-shadow:4px 4px 0 var(--paper-dark);
+}
+.shell-cup .shell-emoji{ font-size:24px; }
+.shell-cup .shell-label{ font-size:10px; font-weight:700; text-align:center; padding:0 4px; line-height:1.3; }
+@keyframes shellShuffle{
+  0%{ transform: translate(0,0); }
+  100%{ transform: translate(var(--dx,0), -6px); }
+}
+.shell-btn{ margin-top:4px; }
+.shell-result{
+  font-family:'Black Han Sans', sans-serif;
+  font-size:18px;
+  text-align:center;
+  min-height:26px;
+  color:var(--stamp-red);
+}
+.shell-hint{ font-size:12px; color:#9c9384; text-align:center; }
+.doc-btn:disabled{ opacity:0.5; cursor:default; }
+
+.candle-wrap{ display:flex; flex-direction:column; align-items:center; gap:14px; }
+.cake-emoji{ font-size:56px; }
+.candles-row{ display:flex; gap:12px; font-size:26px; }
+.candle{ position:relative; transition: opacity 0.4s ease, filter 0.4s ease; }
+.candle.out{ opacity:0.4; filter:grayscale(1); }
+.candle .puff{
+  position:absolute; top:-14px; left:50%; transform:translateX(-50%);
+  font-size:16px; opacity:0; transition:opacity 0.4s ease, transform 0.6s ease;
+}
+.candle.out .puff{ opacity:1; transform:translate(-50%, -10px); }
+.timing-bar-wrap{ width:260px; }
+.timing-bar{
+  position:relative;
+  width:260px; height:16px;
+  background:var(--paper-dark);
+  border:2px solid var(--ink);
+  overflow:hidden;
+}
+.timing-zone{
+  position:absolute; top:0; bottom:0;
+  background:var(--tape-yellow);
+}
+.timing-marker{
+  position:absolute; top:-3px;
+  width:6px; height:22px;
+  background:var(--stamp-red);
+  border-radius:2px;
+}
+.candle-result{
+  font-family:'Black Han Sans', sans-serif;
+  font-size:16px;
+  text-align:center;
+  min-height:24px;
+  color:var(--stamp-red);
+}
+
 #stamp-splash{
   position:fixed; inset:0;
   background:rgba(20,16,14,0.92);
@@ -374,7 +451,14 @@ const CONFIG = {
   ],
 
   closingTitle: "다시 한 번, 생일 축하해 🎉",
-  closingDesc: "오늘 하루도, 앞으로의 모든 날도 행복하길."
+  closingDesc: "오늘 하루도, 앞으로의 모든 날도 행복하길.",
+
+  gifts: [
+    { emoji: "🎁", label: "커피 기프티콘" },
+    { emoji: "🍫", label: "초콜릿 한 상자" },
+    { emoji: "💌", label: "손편지 + 포옹권" },
+    { emoji: "🍥", label: "나루토 육미 피규어", neverWin: true }
+  ],
 };
 </script>
 
@@ -499,6 +583,36 @@ const CONFIG = {
     <div class="gallery" id="galleryWrap"></div>
   </section>
 
+  <section class="section reveal">
+    <div class="label">04</div>
+    <h2 class="section-title">선물 뽑기</h2>
+    <div class="shell-wrap">
+      <div class="shell-row" id="shellRow"></div>
+      <button class="doc-btn yes shell-btn" id="btnShuffle">선물 뽑기 시작 🎁</button>
+      <div class="shell-result" id="shellResult"></div>
+      <div class="shell-hint">섞은 뒤 컵 하나를 눌러서 골라줘!</div>
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <div class="label">05</div>
+    <h2 class="section-title">초 불기</h2>
+    <div class="candle-wrap">
+      <div class="cake-emoji">🎂</div>
+      <div class="candles-row" id="candlesRow"></div>
+      <div class="timing-bar-wrap">
+        <div class="timing-bar">
+          <div class="timing-zone" id="timingZone"></div>
+          <div class="timing-marker" id="timingMarker"></div>
+        </div>
+      </div>
+      <button class="doc-btn yes" id="btnBlow">후~ 불기!</button>
+      <div class="candle-result" id="candleResult"></div>
+      <button class="doc-btn no hidden" id="btnCandleRetry" style="margin-top:4px;">다시하기 🔄</button>
+      <div class="shell-hint">마커가 노란 구간에 있을 때 버튼을 눌러줘!</div>
+    </div>
+  </section>
+
   <section class="section closing reveal">
     <div class="closing-title" id="closingTitle"></div>
     <p class="closing-desc" id="closingDesc"></p>
@@ -584,6 +698,195 @@ CONFIG.photos.forEach(p=>{
   cap.textContent = p.caption || '';
   el.appendChild(cap);
   galleryWrap.appendChild(el);
+});
+
+// ---------- 선물 뽑기 (야바위 컵) ----------
+const SHELL_CUP_WIDTH = 74;
+const SHELL_CUP_GAP = 18;
+const SHELL_STEP = SHELL_CUP_WIDTH + SHELL_CUP_GAP;
+let shellCups = [];
+
+function shuffleArray(arr){
+  const a = arr.slice();
+  for(let i=a.length-1; i>0; i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function showCupFace(cupObj, faceUp, useActual){
+  const gift = useActual ? cupObj.actualGift : cupObj.displayGift;
+  if(faceUp){
+    cupObj.el.classList.add('revealed');
+    cupObj.el.innerHTML = `<div class="shell-emoji">${gift.emoji}</div><div class="shell-label">${gift.label}</div>`;
+  } else {
+    cupObj.el.classList.remove('revealed');
+    cupObj.el.textContent = '?';
+  }
+}
+
+function initShellCups(){
+  const row = document.getElementById('shellRow');
+  row.innerHTML = '';
+  const allGifts = CONFIG.gifts && CONFIG.gifts.length ? CONFIG.gifts : [{ emoji:"🎁", label:"선물" }];
+  const winnableGifts = allGifts.filter(g => !g.neverWin);
+  const pool = winnableGifts.length ? winnableGifts : allGifts;
+
+  const count = Math.min(4, allGifts.length) || 4;
+  // 보여주기용(꼬시기용, 나루토 포함 가능)
+  const displayGifts = shuffleArray(allGifts).slice(0, count);
+  // 실제 당첨용(나루토 등 neverWin 항목은 절대 제외)
+  const actualGifts = [];
+  for(let i=0; i<count; i++){
+    actualGifts.push(pool[i % pool.length]);
+  }
+  shuffleArray(actualGifts);
+
+  row.style.width = (count * SHELL_STEP - SHELL_CUP_GAP) + 'px';
+  shellCups = [];
+  for(let i=0; i<count; i++){
+    const cup = document.createElement('div');
+    cup.className = 'shell-cup';
+    cup.style.position = 'absolute';
+    cup.style.top = '0';
+    cup.style.left = '0';
+    cup.style.transition = 'transform 0.4s ease';
+    cup.style.transform = `translateX(${i * SHELL_STEP}px)`;
+    cup.textContent = '?';
+    row.appendChild(cup);
+    shellCups.push({
+      el: cup,
+      displayGift: displayGifts[i % displayGifts.length],
+      actualGift: actualGifts[i],
+      pos: i
+    });
+  }
+}
+initShellCups();
+
+function doShellShuffleSteps(steps, done){
+  let count = 0;
+  function step(){
+    if(count >= steps){ done(); return; }
+    let i = Math.floor(Math.random() * shellCups.length);
+    let j = Math.floor(Math.random() * shellCups.length);
+    if(shellCups.length > 1){
+      while(j === i) j = Math.floor(Math.random() * shellCups.length);
+    }
+    const posI = shellCups[i].pos, posJ = shellCups[j].pos;
+    shellCups[i].pos = posJ;
+    shellCups[j].pos = posI;
+    shellCups[i].el.style.transform = `translateX(${posJ * SHELL_STEP}px)`;
+    shellCups[j].el.style.transform = `translateX(${posI * SHELL_STEP}px)`;
+    count++;
+    setTimeout(step, 260);
+  }
+  step();
+}
+
+function pickCup(cupObj){
+  shellCups.forEach(c=>{ c.el.classList.remove('pickable'); c.el.onclick = null; });
+  showCupFace(cupObj, true, true);
+  document.getElementById('shellResult').textContent = `🎉 당첨: ${cupObj.actualGift.emoji} ${cupObj.actualGift.label}!`;
+}
+
+
+document.getElementById('btnShuffle').addEventListener('click', ()=>{
+  const btn = document.getElementById('btnShuffle');
+  const resultEl = document.getElementById('shellResult');
+  resultEl.textContent = '';
+  btn.disabled = true;
+
+  initShellCups(); // 매 라운드 새로 배정
+  // 1) 상품 먼저 보여주기
+  shellCups.forEach(c => showCupFace(c, true));
+
+  setTimeout(()=>{
+    // 2) 다시 뒤집고 섞기
+    shellCups.forEach(c => showCupFace(c, false));
+    doShellShuffleSteps(7, ()=>{
+      // 3) 클릭해서 고를 수 있게
+      shellCups.forEach(c=>{
+        c.el.classList.add('pickable');
+        c.el.onclick = ()=> pickCup(c);
+      });
+      btn.disabled = false;
+    });
+  }, 3000);
+});
+
+// ---------- 초 불기 (타이밍 게임) ----------
+const CANDLE_COUNT = 5;
+const BAR_WIDTH = 260;
+const MARKER_WIDTH = 6;
+const MARKER_MAX = BAR_WIDTH - MARKER_WIDTH;
+let markerPos = 0;
+let markerDir = 1;
+let markerSpeed = 3.4;
+let markerAnimId = null;
+let candlesBlownOut = false;
+
+function renderCandles(){
+  const row = document.getElementById('candlesRow');
+  row.innerHTML = '';
+  for(let i=0; i<CANDLE_COUNT; i++){
+    const c = document.createElement('div');
+    c.className = 'candle';
+    c.innerHTML = '🕯️<span class="puff">💨</span>';
+    row.appendChild(c);
+  }
+}
+renderCandles();
+
+function setRandomZone(){
+  const zoneWidth = 42;
+  const zoneStart = Math.random() * (MARKER_MAX - zoneWidth);
+  const zoneEl = document.getElementById('timingZone');
+  zoneEl.style.left = zoneStart + 'px';
+  zoneEl.style.width = zoneWidth + 'px';
+  return { start: zoneStart, end: zoneStart + zoneWidth };
+}
+let currentZone = setRandomZone();
+
+function animateMarker(){
+  markerPos += markerDir * markerSpeed;
+  if(markerPos >= MARKER_MAX){ markerPos = MARKER_MAX; markerDir = -1; }
+  if(markerPos <= 0){ markerPos = 0; markerDir = 1; }
+  document.getElementById('timingMarker').style.transform = `translateX(${markerPos}px)`;
+  markerAnimId = requestAnimationFrame(animateMarker);
+}
+animateMarker();
+
+document.getElementById('btnBlow').addEventListener('click', ()=>{
+  if(candlesBlownOut) return;
+  const resultEl = document.getElementById('candleResult');
+  const success = markerPos >= currentZone.start && markerPos <= currentZone.end;
+  if(success){
+    candlesBlownOut = true;
+    if(markerAnimId) cancelAnimationFrame(markerAnimId);
+    document.querySelectorAll('.candle').forEach((c, idx)=>{
+      setTimeout(()=> c.classList.add('out'), idx * 120);
+    });
+    resultEl.textContent = '🎉 딱 맞췄어! 소원 빌었지? 이루어질 거야!';
+    document.getElementById('btnBlow').disabled = true;
+    document.getElementById('btnCandleRetry').classList.remove('hidden');
+  } else {
+    resultEl.textContent = '앗, 타이밍 놓쳤다! 다시 도전해봐 🔥';
+    currentZone = setRandomZone();
+  }
+});
+
+document.getElementById('btnCandleRetry').addEventListener('click', ()=>{
+  candlesBlownOut = false;
+  renderCandles();
+  currentZone = setRandomZone();
+  markerPos = 0;
+  markerDir = 1;
+  document.getElementById('candleResult').textContent = '';
+  document.getElementById('btnBlow').disabled = false;
+  document.getElementById('btnCandleRetry').classList.add('hidden');
+  animateMarker();
 });
 
 const gate = document.getElementById('gate');
