@@ -206,6 +206,53 @@ body{
   color:var(--stamp-red);
 }
 
+.confetti-piece{
+  position:fixed;
+  top:-20px;
+  width:9px;
+  height:14px;
+  z-index:400;
+  pointer-events:none;
+  opacity:0.95;
+  animation-name: confettiFall;
+  animation-timing-function: cubic-bezier(.4,0,.6,1);
+  animation-fill-mode: forwards;
+}
+@keyframes confettiFall{
+  0%{ transform: translateY(0) rotate(0deg); opacity:1; }
+  100%{ transform: translateY(110vh) rotate(600deg); opacity:0.9; }
+}
+
+.photo-wrap{ display:flex; flex-direction:column; align-items:center; gap:14px; }
+.photo-frame{
+  position:relative;
+  width:280px; height:280px;
+  border:3px solid var(--ink);
+  background:var(--paper-dark);
+  overflow:hidden;
+  box-shadow:6px 6px 0 var(--paper-dark);
+}
+.photo-frame video, .photo-frame canvas{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+.photo-placeholder{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  flex-direction:column; gap:8px;
+  font-size:13px; color:#a89d87; text-align:center; line-height:1.6;
+}
+.photo-overlay-text{
+  position:absolute; bottom:8px; left:0; right:0;
+  text-align:center;
+  font-family:'Black Han Sans', sans-serif;
+  font-size:14px;
+  color:#fff;
+  text-shadow:1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+  pointer-events:none;
+}
+.photo-btns{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+.photo-status{ font-size:12px; color:#9c9384; text-align:center; }
+
 #stamp-splash{
   position:fixed; inset:0;
   background:rgba(20,16,14,0.92);
@@ -419,7 +466,7 @@ const CONFIG = {
 
   heroEyebrow: "SPECIAL DOCUMENT · 생일 특별 서류",
   heroTitleTop: "생일 축하해",
-  heroName: "진범아!",
+  heroName: "자기야!",
   heroDesc: "1년에 한 번뿐인 오늘, 너를 위해 준비했어. 천천히 내려보면서 읽어줘.",
 
   letterBody: `자기야, 생일 축하해!
@@ -459,6 +506,8 @@ const CONFIG = {
     { emoji: "💌", label: "손편지 + 포옹권" },
     { emoji: "🍥", label: "나루토 육미 피규어", neverWin: true }
   ],
+
+  photoCaption: "생일 축하해 자기야! 🎂",
 };
 </script>
 
@@ -493,6 +542,7 @@ const CONFIG = {
     <div id="passError" style="text-align:center; font-size:12px; color:var(--stamp-red); min-height:16px; margin-bottom:10px;"></div>
     <div class="doc-buttons">
       <button class="doc-btn yes" id="btnPassSubmit">확인</button>
+      <button class="doc-btn no" id="btnPassExit">나가기</button>
     </div>
   </div>
 </div>
@@ -613,9 +663,30 @@ const CONFIG = {
     </div>
   </section>
 
+  <section class="section reveal">
+    <div class="label">06</div>
+    <h2 class="section-title">인증샷 찍기</h2>
+    <div class="photo-wrap">
+      <div class="photo-frame" id="photoFrame">
+        <video id="photoVideo" class="hidden" autoplay playsinline muted></video>
+        <canvas id="photoCanvas" class="hidden"></canvas>
+        <div class="photo-placeholder" id="photoPlaceholder">📷<br>카메라를 켜서<br>인증샷을 남겨봐</div>
+        <div class="photo-overlay-text" id="photoOverlayText"></div>
+      </div>
+      <div class="photo-btns">
+        <button class="doc-btn yes" id="btnCamStart">카메라 켜기 📷</button>
+        <button class="doc-btn yes hidden" id="btnCapture">촬영하기</button>
+        <button class="doc-btn no hidden" id="btnRetake">다시 찍기</button>
+        <a class="doc-btn yes hidden" id="btnDownload" download="생일인증샷.png" style="display:inline-block; text-decoration:none;">다운로드 💾</a>
+      </div>
+      <div class="photo-status" id="photoStatus"></div>
+    </div>
+  </section>
+
   <section class="section closing reveal">
     <div class="closing-title" id="closingTitle"></div>
     <p class="closing-desc" id="closingDesc"></p>
+    <button class="replay-btn" id="btnGoGuestbook" style="margin-right:8px;">축하 메세지 보러가기 💌</button>
     <button class="replay-btn" id="btnReplay">처음부터 다시 보기</button>
   </section>
 </div>
@@ -889,6 +960,76 @@ document.getElementById('btnCandleRetry').addEventListener('click', ()=>{
   animateMarker();
 });
 
+// ---------- 인증샷 찍기 ----------
+const photoVideo = document.getElementById('photoVideo');
+const photoCanvas = document.getElementById('photoCanvas');
+const photoPlaceholder = document.getElementById('photoPlaceholder');
+const photoOverlayText = document.getElementById('photoOverlayText');
+let camStream = null;
+
+async function startCamera(){
+  const statusEl = document.getElementById('photoStatus');
+  statusEl.textContent = '';
+  try{
+    camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio:false });
+    photoVideo.srcObject = camStream;
+    photoVideo.classList.remove('hidden');
+    photoCanvas.classList.add('hidden');
+    photoPlaceholder.classList.add('hidden');
+    photoOverlayText.textContent = CONFIG.photoCaption || '';
+    document.getElementById('btnCamStart').classList.add('hidden');
+    document.getElementById('btnCapture').classList.remove('hidden');
+    document.getElementById('btnRetake').classList.add('hidden');
+    document.getElementById('btnDownload').classList.add('hidden');
+  }catch(e){
+    statusEl.textContent = '카메라를 켤 수 없어요 ㅠ 브라우저 카메라 권한을 허용했는지 확인해줘.';
+  }
+}
+
+document.getElementById('btnCamStart').addEventListener('click', startCamera);
+
+document.getElementById('btnCapture').addEventListener('click', ()=>{
+  const size = 280;
+  photoCanvas.width = size;
+  photoCanvas.height = size;
+  const ctx = photoCanvas.getContext('2d');
+  const vw = photoVideo.videoWidth || size;
+  const vh = photoVideo.videoHeight || size;
+  const scale = Math.max(size / vw, size / vh);
+  const sw = size / scale, sh = size / scale;
+  const sx = (vw - sw) / 2, sy = (vh - sh) / 2;
+  ctx.drawImage(photoVideo, sx, sy, sw, sh, 0, 0, size, size);
+
+  const text = CONFIG.photoCaption || '';
+  if(text){
+    ctx.font = "bold 16px sans-serif";
+    ctx.textAlign = 'center';
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = 'rgba(0,0,0,0.9)';
+    ctx.fillStyle = '#fff';
+    ctx.strokeText(text, size/2, size-16);
+    ctx.fillText(text, size/2, size-16);
+  }
+
+  if(camStream){ camStream.getTracks().forEach(t => t.stop()); }
+  photoVideo.classList.add('hidden');
+  photoCanvas.classList.remove('hidden');
+  photoOverlayText.textContent = '';
+
+  const dataUrl = photoCanvas.toDataURL('image/png');
+  const dlBtn = document.getElementById('btnDownload');
+  dlBtn.href = dataUrl;
+  dlBtn.classList.remove('hidden');
+  document.getElementById('btnCapture').classList.add('hidden');
+  document.getElementById('btnRetake').classList.remove('hidden');
+});
+
+document.getElementById('btnRetake').addEventListener('click', ()=>{
+  document.getElementById('btnDownload').classList.add('hidden');
+  document.getElementById('btnRetake').classList.add('hidden');
+  startCamera();
+});
+
 const gate = document.getElementById('gate');
 const gate2 = document.getElementById('gate2');
 const passGate = document.getElementById('passGate');
@@ -950,6 +1091,7 @@ function runStampAndReveal(){
     content.classList.remove('hidden');
     initReveal();
     window.scrollTo(0,0);
+    fireConfetti();
   }, 1100);
 }
 
@@ -976,6 +1118,10 @@ function checkPasscode(){
 }
 
 document.getElementById('btnPassSubmit').addEventListener('click', checkPasscode);
+document.getElementById('btnPassExit').addEventListener('click', ()=>{
+  passGate.classList.add('hidden');
+  gate.classList.remove('hidden');
+});
 document.getElementById('passInput').addEventListener('keydown', (e)=>{
   if(e.key === 'Enter') checkPasscode();
 });
@@ -1014,6 +1160,33 @@ document.getElementById('btnReplay').addEventListener('click', ()=>{
   gate.classList.remove('hidden');
 });
 
+document.getElementById('btnGoGuestbook').addEventListener('click', ()=>{
+  content.classList.add('hidden');
+  window.scrollTo(0,0);
+  friendReject.classList.remove('hidden');
+  loadGuestbook();
+});
+
+function fireConfetti(count){
+  count = count || 90;
+  const colors = ['#C13B3B', '#F2C744', '#4FC3F7', '#7CFC00', '#E8A0AC', '#FBF7EE'];
+  for(let i=0; i<count; i++){
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = (Math.random()*100) + 'vw';
+    piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+    piece.style.animationDuration = (2.4 + Math.random()*1.8) + 's';
+    piece.style.animationDelay = (Math.random()*0.6) + 's';
+    piece.style.transform = `rotate(${Math.random()*360}deg)`;
+    if(Math.random() > 0.5){
+      piece.style.borderRadius = '50%';
+    }
+    document.body.appendChild(piece);
+    setTimeout(()=> piece.remove(), 5000);
+  }
+}
+
+let confettiFired = false;
 function initReveal(){
   const items = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver((entries)=>{
