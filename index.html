@@ -95,6 +95,11 @@ body{
   padding:14px 32px;
   border:2px solid var(--ink);
   background:var(--paper);
+  color:var(--ink);
+  text-decoration:none;
+  display:inline-block;
+  -webkit-appearance:none;
+  appearance:none;
   cursor:pointer;
   position:relative;
   transition:transform 0.08s ease;
@@ -431,7 +436,10 @@ body{
 .closing-desc{ font-size:15px; color:#5c554a; margin-bottom:32px; }
 .replay-btn{
   font-family:'Noto Sans KR', sans-serif; font-weight:700; padding:12px 28px;
-  border:2px solid var(--ink); background:transparent; cursor:pointer; font-size:14px;
+  border:2px solid var(--ink); background:transparent; color:var(--ink);
+  text-decoration:none; display:inline-block;
+  -webkit-appearance:none; appearance:none;
+  cursor:pointer; font-size:14px;
 }
 .replay-btn:hover{ background:var(--ink); color:var(--white-card); }
 
