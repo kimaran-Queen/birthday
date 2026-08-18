@@ -696,7 +696,6 @@ const CONFIG = {
   <section class="section closing reveal">
     <div class="closing-title" id="closingTitle"></div>
     <p class="closing-desc" id="closingDesc"></p>
-    <button class="replay-btn" id="btnGoGuestbook" style="margin-right:8px;">축하 메세지 보러가기 💌</button>
     <button class="replay-btn" id="btnReplay">처음부터 다시 보기</button>
   </section>
 </div>
@@ -1211,13 +1210,6 @@ document.getElementById('btnReplay').addEventListener('click', ()=>{
   content.classList.add('hidden');
   window.scrollTo(0,0);
   gate.classList.remove('hidden');
-});
-
-document.getElementById('btnGoGuestbook').addEventListener('click', ()=>{
-  content.classList.add('hidden');
-  window.scrollTo(0,0);
-  friendReject.classList.remove('hidden');
-  loadGuestbook();
 });
 
 function fireConfetti(count){
